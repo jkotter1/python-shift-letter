@@ -1,0 +1,658 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1399</width>
+    <height>693</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QScrollArea" name="scrollArea">
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="scrollAreaWidgetContents_2">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>1360</width>
+           <height>1896</height>
+          </rect>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_4">
+          <item row="0" column="0">
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_3">
+              <property name="bottomMargin">
+               <number>9</number>
+              </property>
+              <item>
+               <layout class="QGridLayout" name="gridLayout_6">
+                <item row="0" column="3">
+                 <widget class="QLabel" name="label_28">
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>FTOV</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="7">
+                 <widget class="QTextEdit" name="textEdit_34"/>
+                </item>
+                <item row="1" column="5">
+                 <widget class="QTextEdit" name="textEdit_30"/>
+                </item>
+                <item row="3" column="6">
+                 <widget class="QTextEdit" name="textEdit_33"/>
+                </item>
+                <item row="4" column="3">
+                 <widget class="QLabel" name="label_40">
+                  <property name="maximumSize">
+                   <size>
+                    <width>1000</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Top X Main</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="2">
+                 <widget class="QTextEdit" name="textEdit_26"/>
+                </item>
+                <item row="0" column="4">
+                 <widget class="QLabel" name="label_27">
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Near Miss</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QDateEdit" name="dateEdit"/>
+                </item>
+                <item row="4" column="2">
+                 <widget class="QLabel" name="label_39">
+                  <property name="maximumSize">
+                   <size>
+                    <width>1000</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>FRACAS</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="5">
+                 <widget class="QTextEdit" name="textEdit_29"/>
+                </item>
+                <item row="4" column="0">
+                 <widget class="QLabel" name="label_32">
+                  <property name="maximumSize">
+                   <size>
+                    <width>1000</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>SPLs</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="4">
+                 <widget class="QLabel" name="label_35">
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Framer JPH</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="6">
+                 <widget class="QTextEdit" name="textEdit_31"/>
+                </item>
+                <item row="1" column="4">
+                 <widget class="QTextEdit" name="textEdit_22"/>
+                </item>
+                <item row="5" column="0">
+                 <widget class="QTextBrowser" name="textBrowser"/>
+                </item>
+                <item row="2" column="2">
+                 <widget class="QLabel" name="label_33">
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Prod Time</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_4">
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Letter ID</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="7">
+                 <widget class="QLabel" name="label_37">
+                  <property name="maximumSize">
+                   <size>
+                    <width>200</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>START Card Audits</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="label_31">
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Prod. Shift</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="5">
+                 <widget class="QLabel" name="label_42">
+                  <property name="maximumSize">
+                   <size>
+                    <width>1000</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Attachments</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="4">
+                 <widget class="QTextEdit" name="textEdit_28"/>
+                </item>
+                <item row="5" column="1">
+                 <widget class="QTextBrowser" name="textBrowser_2"/>
+                </item>
+                <item row="0" column="5">
+                 <widget class="QLabel" name="label_26">
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>PMs Comp.</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QTextEdit" name="textEdit_24"/>
+                </item>
+                <item row="2" column="5">
+                 <widget class="QLabel" name="label_36">
+                  <property name="maximumSize">
+                   <size>
+                    <width>150</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Underbody JPH</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="6">
+                 <widget class="QLabel" name="label_23">
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>SPLs Comp.</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="1">
+                 <widget class="QTextEdit" name="textEdit_25"/>
+                </item>
+                <item row="5" column="4">
+                 <widget class="QTextBrowser" name="textBrowser_5"/>
+                </item>
+                <item row="5" column="3">
+                 <widget class="QTextBrowser" name="textBrowser_4"/>
+                </item>
+                <item row="4" column="1">
+                 <widget class="QLabel" name="label_38">
+                  <property name="maximumSize">
+                   <size>
+                    <width>1000</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>4D</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QLabel" name="label_30">
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Date</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="3">
+                 <widget class="QTextEdit" name="textEdit_23"/>
+                </item>
+                <item row="3" column="0">
+                 <widget class="QComboBox" name="comboBox_6">
+                  <item>
+                   <property name="text">
+                    <string>A</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>B</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>C</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>D</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item row="1" column="7">
+                 <widget class="QTextEdit" name="textEdit_32"/>
+                </item>
+                <item row="0" column="2">
+                 <widget class="QLabel" name="label_29">
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Maint. Crew</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="2">
+                 <widget class="QTextBrowser" name="textBrowser_3"/>
+                </item>
+                <item row="2" column="3">
+                 <widget class="QLabel" name="label_34">
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Metal JPH</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="3">
+                 <widget class="QTextEdit" name="textEdit_27"/>
+                </item>
+                <item row="1" column="2">
+                 <widget class="QComboBox" name="comboBox_2">
+                  <item>
+                   <property name="text">
+                    <string>A</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>B</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>C</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>D</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item row="4" column="4">
+                 <widget class="QLabel" name="label_41">
+                  <property name="maximumSize">
+                   <size>
+                    <width>1000</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Top X Subs</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="7">
+                 <widget class="QPushButton" name="savePB">
+                  <property name="text">
+                   <string>Save</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_2">
+                <property name="text">
+                 <string>Safety</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QTextEdit" name="textEdit_3"/>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_3">
+                <property name="text">
+                 <string>Start Card Audit</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QTextEdit" name="textEdit"/>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_5">
+                <property name="text">
+                 <string>Joining</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QTextEdit" name="textEdit_2"/>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_6">
+                <property name="text">
+                 <string>Dimensional</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QTextEdit" name="textEdit_4"/>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_13">
+                <property name="text">
+                 <string>Delivery - Breakdowns</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QTextEdit" name="textEdit_5"/>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_14">
+                <property name="text">
+                 <string>Top X Actions</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QTextEdit" name="textEdit_6"/>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_15">
+                <property name="text">
+                 <string>Manning/Materials</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QTextEdit" name="textEdit_17"/>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_16">
+                <property name="text">
+                 <string>Recognition</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QTextEdit" name="textEdit_18"/>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_17">
+                <property name="text">
+                 <string>Notifications - HR - Training</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QTextEdit" name="textEdit_16"/>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_18">
+                <property name="text">
+                 <string>Equipment Failures</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QTextEdit" name="textEdit_15"/>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_19">
+                <property name="text">
+                 <string>Door Repairs</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QTextEdit" name="textEdit_20"/>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_21">
+                <property name="text">
+                 <string>Equipment Repairs</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QTextEdit" name="textEdit_19"/>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_20">
+                <property name="text">
+                 <string>Follow-Up Needed</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QTextEdit" name="textEdit_21"/>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_22">
+                <property name="text">
+                 <string>Environmental</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QTextEdit" name="textEdit_7"/>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1399</width>
+     <height>37</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuNight_Letter">
+    <property name="title">
+     <string>Shift Letter </string>
+    </property>
+    <widget class="QMenu" name="menuOption_2">
+     <property name="title">
+      <string>Shutdown Form</string>
+     </property>
+     <addaction name="actionOption_A"/>
+     <addaction name="separator"/>
+     <addaction name="actionOption_B"/>
+    </widget>
+    <addaction name="separator"/>
+    <addaction name="menuOption_2"/>
+    <addaction name="separator"/>
+    <addaction name="actionOption_3"/>
+    <addaction name="separator"/>
+    <addaction name="actionStartup_Checklist"/>
+    <addaction name="actionRecognition"/>
+    <addaction name="actionStart_Card_Report"/>
+   </widget>
+   <widget class="QMenu" name="menuSave">
+    <property name="title">
+     <string>Save</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuPrint">
+    <property name="title">
+     <string>Print</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuDate">
+    <property name="title">
+     <string>Date</string>
+    </property>
+   </widget>
+   <addaction name="menuNight_Letter"/>
+   <addaction name="menuSave"/>
+   <addaction name="menuPrint"/>
+   <addaction name="menuDate"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionOption_3">
+   <property name="text">
+    <string>Weekend Form</string>
+   </property>
+  </action>
+  <action name="actionOption_A">
+   <property name="text">
+    <string>Option A</string>
+   </property>
+  </action>
+  <action name="actionOption_B">
+   <property name="text">
+    <string>Option B</string>
+   </property>
+  </action>
+  <action name="actionStartup_Checklist">
+   <property name="text">
+    <string>Startup Checklist</string>
+   </property>
+  </action>
+  <action name="actionRecognition">
+   <property name="text">
+    <string>Recognition</string>
+   </property>
+  </action>
+  <action name="actionStart_Card_Report">
+   <property name="text">
+    <string>Start Card Report</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>savePB</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>update()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1223</x>
+     <y>353</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>951</x>
+     <y>-5</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
