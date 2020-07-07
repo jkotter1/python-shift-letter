@@ -220,7 +220,7 @@ class NightLetterMain(QtWidgets.QMainWindow):
 
     def attachDict(self):
         attachString = self.ui.Attachments.toPlainText().split("\n")
-        print(attachString)
+        #print(attachString)
         return attachString
 
     def fileExists(self, filepath):
@@ -271,7 +271,10 @@ class NightLetterMain(QtWidgets.QMainWindow):
                 lastLoadFieldValue = valdict[fieldName]
                 con = self.sql_connection()
                 cursorObj = con.cursor()
-                if self.query_field(fieldName, letterID) == lastLoadFieldValue:
+                
+                currentDBFieldValue = self.query_field(fieldName, letterID)
+                
+                if currentDBFieldValue == lastLoadFieldValue or currentDBFieldValue == None:
                     queryString = "UPDATE NightLetterData2 SET " + fieldName + " = ? WHERE LetterID = '" + letterID + "'"
                     cursorObj.execute(queryString, [fieldval])
                     con.commit()
@@ -401,7 +404,7 @@ class NightLetterMain(QtWidgets.QMainWindow):
         for fieldname in self.ui.LatestValueDict:
             fname = str(fieldname)
             fieldval = self.ui.LatestValueDict[fname]
-            dbval = LatestVals(fieldname)
+            dbval = LatestVals[fieldname]
             if dbval != fieldval:
                 self.update_field(fieldname, dbval)
                 self.ui.LatestValueDict[fname] = dbval
