@@ -136,19 +136,20 @@ class NightLetterMain(QtWidgets.QMainWindow):
         else:
             print("An error occured.")
 
-    def goToPreviousRecord(self, recurseLetterId: int = -1): #combine with goToNextRecord?
+    def goToPreviousRecord(self, recurseLetterId): #combine with goToNextRecord?
         
-        if recurseLetterId >= 0: #assumes letter ids in the sql database are positive, so they better not be negative! !!!Why is recurseLetterId here? Is there a way that there could be negative LetterIDs in the DB?
+        OldestLetterID = int(self.get_newestORoldest_LetterID("oldest"))
+        
+        if recurseLetterId > OldestLetterID: # Normal case - go to the next oldest record
             prevLetterID = recurseLetterId - 1
-        else:
-            prevLetterID = int(self.ui.LetterID.toPlainText()) - 1
+        elif recurseLetterId == OldestLetterID: # Special case - you are already at the oldest record. You cannot go any farther back.
+            prevLetterID = recurseLetterId
+        else:                                #Not sure how you could get here
+            print("The program attempted to access a record older than any record in the database, but it could only load the oldest record.")
+            prevLetterID = recurseLetterId
         
-        #print(prevLetterID)
-
         LatestValueDict = self.query_all_record_fields(prevLetterID)       #Dictionary of all the most recently queried values for each field from the database. Get the queried values by giving it the field name (i.e. self.ui.LatestValueDict[Safety] )
-
         
-
         if LatestValueDict == "Record Not Found" and prevLetterID > -1: # If the specific record number was not found in the database, try again with a smaller number to get to the correct previous record id. If you get to -1, you have gone too far.
             self.goToPreviousRecord(prevLetterID)
         else:
@@ -158,7 +159,7 @@ class NightLetterMain(QtWidgets.QMainWindow):
     def goToNextRecord(self): 
         
         letterID = int(self.ui.LetterID.toPlainText())
-        NewestLetterID = int(self.get_newest_LetterID())
+        NewestLetterID = int(self.get_newestORoldest_LetterID("newest"))
         nextValue = str(letterID + 1)
         if letterID == NewestLetterID:
             self.ui.NextRecordPB.setText("New...")
@@ -285,7 +286,7 @@ class NightLetterMain(QtWidgets.QMainWindow):
             if type(obj) == 'NoneType':
                 print("No field currently in focus.")
             else:
-                 raise AttribueError
+                 raise AttributeError
 
     def load_most_recently_created_record(self): # Finds and loads the record with the most recent date
         con = application.sql_connection()
@@ -296,7 +297,7 @@ class NightLetterMain(QtWidgets.QMainWindow):
         latestRecordNum = vals[0][0]
         self.load_all_fields(latestRecordNum)
 
-    def get_newest_LetterID(self): # Finds and loads the record with the most recent date
+    """def get_newest_LetterID(self): # Finds and loads the record with the most recent date
         con = application.sql_connection()
         cursorObj = con.cursor()
         cursorObj.execute("SELECT max(LetterID) FROM NightLetterData2")
@@ -304,6 +305,23 @@ class NightLetterMain(QtWidgets.QMainWindow):
         con.close()
         latestRecordNum = vals[0][0]
         return latestRecordNum
+    
+    """
+    #This function was replaced by get_newestORoldest_LetterID
+
+    def get_newestORoldest_LetterID(self, indicator): # Finds and loads the oldest or most recent record 
+        con = application.sql_connection()
+        cursorObj = con.cursor()
+        if indicator == "newest":
+            cursorObj.execute("SELECT max(LetterID) FROM NightLetterData2")
+        elif indicator == "oldest":
+            cursorObj.execute("SELECT min(LetterID) FROM NightLetterData2")
+        else:
+            print("The get_firstORlast_LetterID function needs an argument that says either \"newest\" or \"oldest\". It didn't get either, so you probably got an error.")
+        vals = cursorObj.fetchall()
+        con.close()
+        RecordNum = vals[0][0]
+        return RecordNum
     
     def query_field(self, fieldname, letterID): # Finds the letter number of the letter with the most recent date
         con = application.sql_connection()
@@ -361,10 +379,15 @@ class NightLetterMain(QtWidgets.QMainWindow):
 
         self.ui.LatestValueDict = self.query_all_record_fields(recordNum)       #Dictionary of all the most recently queried values for each field from the database. Get the queried values by giving it the field name (i.e. self.ui.LatestValueDict[Safety] )
 
-        if self.ui.LatestValueDict["LetterID"] == self.get_newest_LetterID():
+        if self.ui.LatestValueDict["LetterID"] == self.get_newestORoldest_LetterID("newest"):
             self.ui.NextRecordPB.setText("New...")
         else:
             self.ui.NextRecordPB.setText("Next")
+
+        if self.ui.LatestValueDict["LetterID"] == self.get_newestORoldest_LetterID("oldest"):
+            self.ui.PrevRecordPB.hide()
+        else:
+            self.ui.NextRecordPB.show()
 
         for w in self.allWidgets():
             wName = w.widget().objectName() 
@@ -394,7 +417,7 @@ class NightLetterMain(QtWidgets.QMainWindow):
 
     def check_if_refresh_needed(self): # Check if changes to a record have occured in the database since the record was last loaded. If a change has occured, reload the record.
         letterID = str(self.ui.LetterID.toPlainText())
-        NewestLetterID = str(self.get_newest_LetterID())
+        NewestLetterID = str(self.get_newestORoldest_LetterID("newest"))
         LatestVals = self.query_all_record_fields(letterID)  #Dictionary of all the most recently queried values for each field from the database. Get the queried values by giving it the field name (i.e. LatestVals[Safety] )
 
         if letterID != NewestLetterID:
@@ -420,7 +443,7 @@ if __name__ == "__main__":
     #application.setStyleSheet(dark_stylesheet)
     application.setStyleSheet(loadStyleSheet())              
 
-    newestRecordNum = application.get_newest_LetterID()
+    newestRecordNum = application.get_newestORoldest_LetterID("newest")
     application.load_all_fields(newestRecordNum)
  
     application.show()
