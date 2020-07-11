@@ -130,31 +130,30 @@ class NightLetterMain(QtWidgets.QMainWindow):
 
         letterID = int(self.ui.LetterID.toPlainText())
         if direction == "prev":
-            self.goToPreviousRecord() # = str(letterID - 1)
+            self.goToPreviousRecord(letterID) # = str(letterID - 1)
         elif direction == "next":
-            self.goToNextRecord() # = str(letterID + 1)
+            self.goToNextRecord(letterID) # = str(letterID + 1)
         else:
             print("An error occured.")
 
     def goToPreviousRecord(self, recurseLetterId: int = -1): #combine with goToNextRecord?
         
-        if recurseLetterId >= 0: #assumes letter ids in the sql database are positive, so they better not be negative!
+        if recurseLetterId >= 0: #assumes letter ids in the sql database are positive, so they better not be negative! !!!Why is recurseLetterId here? Is there a way that there could be negative LetterIDs in the DB?
             prevLetterID = recurseLetterId - 1
         else:
             prevLetterID = int(self.ui.LetterID.toPlainText()) - 1
+        
+        #print(prevLetterID)
 
-        try:
-            con = application.sql_connection()
-            cursorObj = con.cursor()
-            cursorObj.execute("SELECT " + str(prevLetterID) + " FROM NightLetterData2")
-            vals = cursorObj.fetchall()
-            con.close()
-            latestRecordNum = vals[0][0]
-        except sqlite3.Error as error:
-            print("Error while connecting to sqlite", error)
+        LatestValueDict = self.query_all_record_fields(prevLetterID)       #Dictionary of all the most recently queried values for each field from the database. Get the queried values by giving it the field name (i.e. self.ui.LatestValueDict[Safety] )
 
-        if self.load_all_fields(latestRecordNum) == "Record Not Found":
-            self.goToPreviousRecord(prevLetterID) # If the specific record number was not found in the database, try again with a smaller number until you get to zero
+        
+
+        if LatestValueDict == "Record Not Found" and prevLetterID > -1: # If the specific record number was not found in the database, try again with a smaller number to get to the correct previous record id. If you get to -1, you have gone too far.
+            self.goToPreviousRecord(prevLetterID)
+        else:
+            print(LatestValueDict["LetterID"])
+            self.load_all_fields(prevLetterID)
 
     def goToNextRecord(self): 
         
@@ -339,14 +338,16 @@ class NightLetterMain(QtWidgets.QMainWindow):
             sqlite_select_Query = "SELECT " + FieldNames + " FROM NightLetterData2 WHERE LetterID = " + str(recordNum) 
             cursor.execute(sqlite_select_Query)
             SQLrecord = cursor.fetchall()
-            #print(SQLrecord)
-
             cursor.close()
+
         except sqlite3.Error as error:
             print("Error while connecting to sqlite", error)
+            return "Record Not Found"
+                
         if SQLrecord == []:
             print("Record Not Found")
             return "Record Not Found"
+
         FieldValueList = list(SQLrecord[0])
         for index, item in enumerate(FieldValueList):
             if item == None:
@@ -358,10 +359,9 @@ class NightLetterMain(QtWidgets.QMainWindow):
     def load_all_fields(self, recordNum): # Queries the values for all fields from the database and inserts the values into the fields for the letter form
         self.ui.AutoSaveActive = False  #so we don't recursively call save_field on textChanged() forever
 
-        LatestVals = self.query_all_record_fields(recordNum)       #Dictionary of all the most recently queried values for each field from the database. Get the queried values by giving it the field name (i.e. LatestVals[Safety] )
-        self.ui.LatestValueDict = LatestVals
+        self.ui.LatestValueDict = self.query_all_record_fields(recordNum)       #Dictionary of all the most recently queried values for each field from the database. Get the queried values by giving it the field name (i.e. self.ui.LatestValueDict[Safety] )
 
-        if LatestVals["LetterID"] == self.get_newest_LetterID():
+        if self.ui.LatestValueDict["LetterID"] == self.get_newest_LetterID():
             self.ui.NextRecordPB.setText("New...")
         else:
             self.ui.NextRecordPB.setText("Next")
@@ -370,7 +370,7 @@ class NightLetterMain(QtWidgets.QMainWindow):
             wName = w.widget().objectName() 
             wType = w.widget().__class__.__name__
             if wType  == "QTextEdit" or wType == "QTextBrowser":
-                NewVal = str(LatestVals[wName])
+                NewVal = str(self.ui.LatestValueDict[wName])
                 self.update_field(wName,NewVal)
 
         self.ui.AutoSaveActive = True # have to turn back on to save as the user types
