@@ -136,7 +136,7 @@ class NightLetterMain(QtWidgets.QMainWindow):
         else:
             print("An error occured.")
 
-    def goToPreviousRecord(self, recurseLetterId): #combine with goToNextRecord?
+    def goToPreviousRecord(self, recurseLetterId): # 
         
         OldestLetterID = int(self.get_newestORoldest_LetterID("oldest"))
         
@@ -144,7 +144,7 @@ class NightLetterMain(QtWidgets.QMainWindow):
             prevLetterID = recurseLetterId - 1
         elif recurseLetterId == OldestLetterID: # Special case - you are already at the oldest record. You cannot go any farther back.
             prevLetterID = recurseLetterId
-        else:                                #Not sure how you could get here
+        else:                                # Not sure how you could get here
             print("The program attempted to access a record older than any record in the database, but it could only load the oldest record.")
             prevLetterID = recurseLetterId
         
@@ -156,35 +156,31 @@ class NightLetterMain(QtWidgets.QMainWindow):
             print(LatestValueDict["LetterID"])
             self.load_all_fields(prevLetterID)
 
-    def goToNextRecord(self): 
-        
-        letterID = int(self.ui.LetterID.toPlainText())
+    def goToNextRecord(self, letterID): # Go to the next newest record. If currently at the newest record, create a new record with a higher LetterID
+        print(letterID)
         NewestLetterID = int(self.get_newestORoldest_LetterID("newest"))
-        nextValue = str(letterID + 1)
+        nextLetterID = letterID + 1
         if letterID == NewestLetterID:
             self.ui.NextRecordPB.setText("New...")
-            New_Record_Query = "INSERT INTO NightLetterData2 (LetterID, Date) VALUES (\"{0}\",\"{1}\")".format(nextValue, date.today().strftime("%m/%d/%Y"))
-            #print(New_Record_Query)
+            New_Record_Query = "INSERT INTO NightLetterData2 (LetterID, Date) VALUES (\"{0}\",\"{1}\")".format(nextLetterID, date.today().strftime("%m/%d/%Y"))
+
             try:
                 con = application.sql_connection()
                 cursorObj = con.cursor()
                 cursorObj.execute(New_Record_Query)
                 con.commit()
                 con.close()
-                self.load_all_fields(nextValue)
+                self.load_all_fields(nextLetterID)
             except sqlite3.Error as error:
                 print("Error while connecting to sqlite", error)
         else:
-            try:
-                con = application.sql_connection()
-                cursorObj = con.cursor()
-                cursorObj.execute("SELECT " + nextValue + " FROM NightLetterData2")
-                vals = cursorObj.fetchall()
-                con.close()
-                latestRecordNum = vals[0][0]
-                self.load_all_fields(latestRecordNum)
-            except sqlite3.Error as error:
-                print("Error while connecting to sqlite", error)
+            LatestValueDict = self.query_all_record_fields(nextLetterID)       #Dictionary of all the most recently queried values for each field from the database. Get the queried values by giving it the field name (i.e. self.ui.LatestValueDict[Safety] )
+        
+            if LatestValueDict == "Record Not Found": # If the specific record number was not found in the database, try again with a incrementally larger number to get to the correct next record id.
+                self.goToNextRecord(nextLetterID)
+            else:
+                self.load_all_fields(nextLetterID)
+
 
 # __________________File Attachment/Removal Functions__________________ (works with Remove Attachments Dialog)
     def attach_document(self, docPath):
@@ -219,7 +215,6 @@ class NightLetterMain(QtWidgets.QMainWindow):
 
     def attachDict(self):
         attachString = self.ui.Attachments.toPlainText().split("\n")
-        #print(attachString)
         return attachString
 
     def fileExists(self, filepath):
@@ -296,18 +291,6 @@ class NightLetterMain(QtWidgets.QMainWindow):
         con.close()
         latestRecordNum = vals[0][0]
         self.load_all_fields(latestRecordNum)
-
-    """def get_newest_LetterID(self): # Finds and loads the record with the most recent date
-        con = application.sql_connection()
-        cursorObj = con.cursor()
-        cursorObj.execute("SELECT max(LetterID) FROM NightLetterData2")
-        vals = cursorObj.fetchall()
-        con.close()
-        latestRecordNum = vals[0][0]
-        return latestRecordNum
-    
-    """
-    #This function was replaced by get_newestORoldest_LetterID
 
     def get_newestORoldest_LetterID(self, indicator): # Finds and loads the oldest or most recent record 
         con = application.sql_connection()
@@ -387,7 +370,7 @@ class NightLetterMain(QtWidgets.QMainWindow):
         if self.ui.LatestValueDict["LetterID"] == self.get_newestORoldest_LetterID("oldest"):
             self.ui.PrevRecordPB.hide()
         else:
-            self.ui.NextRecordPB.show()
+            self.ui.PrevRecordPB.show()
 
         for w in self.allWidgets():
             wName = w.widget().objectName() 
