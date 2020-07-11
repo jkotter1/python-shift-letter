@@ -71,19 +71,18 @@ class RemoveAttachmentDialog(QDialog):
                 try:
                     os.remove(AttachmentStoragePath+cbName)
                 except FileNotFoundError:
-                    print("The file has already been removed.") # Probably should add a dialog box for this at some point.
+                    print("The file was not found in the attachments folder.") # Probably should add a dialog box for this at some point.
                 attachFieldString = attachFieldString.replace(cbName,"")
-        self.ui.AutoSaveActive = False
-        self.update_field("Attachments", attachFieldString) #application.ui.Attachments.setText(attachFieldString)
+        application.ui.AutoSaveActive = False
+        application.update_field("Attachments", attachFieldString) #application.ui.Attachments.setText(attachFieldString)
         self.removeEmptyLines()
         application.save_field(application.ui.Attachments)
-        self.ui.AutoSaveActive = True
+        application.ui.AutoSaveActive = True
     
     def removeEmptyLines(self):
         attachFieldString = application.ui.Attachments.toHtml()
         emptyCheckBox = "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>"
-        attachFieldString = attachFieldString.replace(emptyCheckBox,"")
-        self.update_field("Attachments", attachFieldString) #application.ui.Attachments.setText(attachFieldString)
+        application.update_field("Attachments", attachFieldString.replace(emptyCheckBox,"")) #application.ui.Attachments.setText(attachFieldString)
 
 
 # __________________Setup Main Form Code__________________ (makes connections for event handlers and widget signals)
