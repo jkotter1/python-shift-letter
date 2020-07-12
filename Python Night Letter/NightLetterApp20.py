@@ -66,10 +66,11 @@ class RemoveAttachmentDialog(QDialog):
         for i in range(layout.count()):
             checkBox = layout.itemAt(i).widget()
             cbName = checkBox.text()
+            letterID = application.ui.LetterID.toPlainText()
             if checkBox.isChecked():
-                AttachmentStoragePath = "W:\\CLTBODY\\Kotter\\Projects\\Night Letter Updates\\Python Night Letter\\Attachments\\"
+                AttachmentStoragePath = "W:\\CLTBODY\\Kotter\\Projects\\Night Letter Updates\\Python Night Letter\\Attachments\\" #Should have this reference the same global variable as the attach file function
                 try:
-                    os.remove(AttachmentStoragePath+cbName)
+                    os.remove(AttachmentStoragePath+letterID+"\\"+cbName)
                 except FileNotFoundError:
                     print("The file was not found in the attachments folder.") # Probably should add a dialog box for this at some point.
                 attachFieldString = attachFieldString.replace(cbName,"")
@@ -184,28 +185,30 @@ class NightLetterMain(QtWidgets.QMainWindow):
 
 # __________________File Attachment/Removal Functions__________________ (works with Remove Attachments Dialog)
     def attach_document(self, docPath):
+        
+        letterID = self.ui.LetterID.toPlainText()
         if docPath is None:
             return
-        NightLetterPath = "W:\\CLTBODY\\Kotter\\Projects\\Night Letter Updates\\Python Night Letter"
-        attachLoc = "\\Attachments" # Must have a folder named Attachments in the same directory as running script
-        recordDate = self.ui.Date.toPlainText().replace("/", "-") #recordDate = datetime.strftime(self.ui.Date.date().toPyDate(), '%m-%d-%y')
-        fileName = "{0}-{1}".format(recordDate, self.getFileName(docPath))
+        NightLetterPath = "W:\\CLTBODY\\Kotter\\Projects\\Night Letter Updates\\Python Night Letter" #Need to be able to set this programmitically, not have it hard-coded.
+        attachLoc = "\\Attachments\\" + letterID # Must have a folder named Attachments in the same directory as running script
+        #recordDate = self.ui.Date.toPlainText().replace("/", "-") #recordDate = datetime.strftime(self.ui.Date.date().toPyDate(), '%m-%d-%y')
+        fileName = self.getFileName(docPath) #"{0}-{1}".format(recordDate, self.getFileName(docPath))
         if fileName == False:
             return
         newDocPath = NightLetterPath + attachLoc + "\\" + fileName
-        copyNum = 1
+        copyNum = 0
         while self.fileExists(newDocPath):
             newDocPath= "{0}{1}\\{2}({3}).{4}".format(NightLetterPath, attachLoc, fileName.rsplit('.', 1)[0], str(copyNum), fileName.rsplit('.', 1)[1])
             copyNum += 1
-        if copyNum > 1:
-            fileName = "{0}({2}).{1}".format(*fileName.rsplit('.', 1) + [copyNum - 1])
+        if copyNum > 0:
+            fileName = "{0}({2}).{1}".format(*fileName.rsplit('.', 1) + [copyNum])
         shutil.copyfile(docPath, newDocPath)
         fileLink = '<span><a href=\"{0}\">{1}</a></span>'.format(newDocPath, fileName)
         self.ui.Attachments.append(fileLink)
         self.save_field(self.ui.Attachments)
     
     def remove_attachment(self):
-        print("work in progress")    
+        #print("work in progress")    
         attachList =  self.attachDict()
         if attachList == ['']:
             return
