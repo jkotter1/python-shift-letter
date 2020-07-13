@@ -274,8 +274,8 @@ class NightLetterMain(QtWidgets.QMainWindow):
         try:
             sqliteConnection = sqlite3.connect('Night Letter 2.0 data.db')
             cursor = sqliteConnection.cursor()
-            if htmlarg != []:
-                cursor.execute(queryString)
+            if htmlarg != "":
+                cursor.execute(queryString, [htmlarg])
             else:
                 cursor.execute(queryString)
             sqliteConnection.commit()
@@ -308,23 +308,24 @@ class NightLetterMain(QtWidgets.QMainWindow):
                 fieldval = str(obj.currentText())
             elif fieldtype == "QTextEdit" or fieldtype == "QTextBrowser":
                 fieldval = obj.toHtml()
-                print(fieldval)
             letterID = self.ui.LetterID.toPlainText()
             valdict = self.ui.LatestValueDict
             if fieldName in valdict:
                 lastLoadFieldValue = valdict[fieldName]
                 
-                con = self.sql_connection()
-                cursorObj = con.cursor()
+                #con = self.sql_connection()
+                #cursorObj = con.cursor()
                 
                 currentDBFieldValue = self.query_field(fieldName, letterID)
                 
                 if currentDBFieldValue == lastLoadFieldValue or currentDBFieldValue == None:
                     queryString = "UPDATE NightLetterData2 SET " + fieldName + " = ? WHERE LetterID = '" + letterID + "'"
-                    cursorObj.execute(queryString, [fieldval])
-                    con.commit()
-                    con.close() 
-                    #self.executeQuery(queryString, fieldval)   
+                    #print(queryString)
+                    #print(queryString, [fieldval])
+                    #cursorObj.execute(queryString, [fieldval])
+                    #con.commit()
+                    #con.close() 
+                    self.executeQuery(queryString, fieldval)   
                     self.ui.LatestValueDict[fieldName] = fieldval
                 else:
                     self.load_all_fields(letterID)
