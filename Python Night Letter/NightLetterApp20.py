@@ -34,15 +34,20 @@ class DatePickerDialog(QDialog):
     def calendar(self):
         dateSelection = self.ui.calendarWidget.selectedDate()
         date_Selected = datetime.strftime(dateSelection.toPyDate(), '%m/%d/%Y')
-        con = application.sql_connection()
+        
+        """con = application.sql_connection()
         cursorObj = con.cursor()
         cursorObj.execute("SELECT * FROM NightLetterData2 WHERE Date= '" + date_Selected +  "'")
         vals = cursorObj.fetchall()
-        con.close()
+        con.close()"""
+
+        vals = application.executeQuery("SELECT * FROM NightLetterData2 WHERE Date= '" + date_Selected +  "'")
+
         self.ui.AutoSaveActive = False
-        if vals != []:
-            chosenRecordNum = vals[0][0]
-            NightLetterMain.load_all_fields(application, chosenRecordNum)
+
+        if vals != []: #vals != []:
+            # chosenRecordNum = vals[0][0]
+            NightLetterMain.load_all_fields(application, vals[0][0])
         else:
             print("There is no record for the date selected.") # Maybe a dialog box for this at some point?
         self.ui.AutoSaveActive = True
@@ -133,6 +138,7 @@ class NightLetterMain(QtWidgets.QMainWindow):
         if direction == "prev":
             self.goToPreviousRecord(letterID) # = str(letterID - 1)
         elif direction == "next":
+            #print("GoToRecord #"+str(letterID))
             self.goToNextRecord(letterID) # = str(letterID + 1)
         else:
             print("An error occured.")
@@ -154,26 +160,38 @@ class NightLetterMain(QtWidgets.QMainWindow):
         if LatestValueDict == "Record Not Found" and prevLetterID > -1: # If the specific record number was not found in the database, try again with a smaller number to get to the correct previous record id. If you get to -1, you have gone too far.
             self.goToPreviousRecord(prevLetterID)
         else:
-            print(LatestValueDict["LetterID"])
+            #print(LatestValueDict["LetterID"])
             self.load_all_fields(prevLetterID)
 
     def goToNextRecord(self, letterID): # Go to the next newest record. If currently at the newest record, create a new record with a higher LetterID
-        print(letterID)
+        #print(letterID)
         NewestLetterID = int(self.get_newestORoldest_LetterID("newest"))
+        #print (NewestLetterID )
         nextLetterID = letterID + 1
+        #print(nextLetterID)
         if letterID == NewestLetterID:
-            self.ui.NextRecordPB.setText("New...")
+            #print("querying...")
+            #self.ui.NextRecordPB.setText("New...")
             New_Record_Query = "INSERT INTO NightLetterData2 (LetterID, Date) VALUES (\"{0}\",\"{1}\")".format(nextLetterID, date.today().strftime("%m/%d/%Y"))
+            #print(New_Record_Query)
+            #try:
+            #    con = application.sql_connection()
+            #    cursorObj = con.cursor() 
+            #    cursorObj.execute(New_Record_Query)
+            #    con.commit()
+            #    con.close()
+            #    self.load_all_fields(nextLetterID)
+            #except sqlite3.Error as error:
+            #    print("Error while connecting to sqlite", error)
+            
+            #print(self.executeQuery(New_Record_Query))
 
-            try:
-                con = application.sql_connection()
-                cursorObj = con.cursor()
-                cursorObj.execute(New_Record_Query)
-                con.commit()
-                con.close()
+            test = self.executeQuery(New_Record_Query)
+            #print(test)
+
+            if test != "Record Not Found":
+                #print("loading...")
                 self.load_all_fields(nextLetterID)
-            except sqlite3.Error as error:
-                print("Error while connecting to sqlite", error)
         else:
             LatestValueDict = self.query_all_record_fields(nextLetterID)       #Dictionary of all the most recently queried values for each field from the database. Get the queried values by giving it the field name (i.e. self.ui.LatestValueDict[Safety] )
         
@@ -252,6 +270,34 @@ class NightLetterMain(QtWidgets.QMainWindow):
         except Error:
             print(Error)
     
+    def executeQuery(self, queryString, htmlarg = ""):
+        try:
+            sqliteConnection = sqlite3.connect('Night Letter 2.0 data.db')
+            cursor = sqliteConnection.cursor()
+            if htmlarg != []:
+                cursor.execute(queryString)
+            else:
+                cursor.execute(queryString)
+            sqliteConnection.commit()
+            SQLrecord = cursor.fetchall()
+            cursor.close()
+            return SQLrecord
+        except sqlite3.Error as error:
+            print("Error while connecting to sqlite", error)
+            return "Record Not Found"
+
+        #try:
+            #    con = application.sql_connection()
+            #    cursorObj = con.cursor() 
+            #    cursorObj.execute(New_Record_Query)
+            #    con.commit()
+            #    con.close()
+            #    self.load_all_fields(nextLetterID)
+            #except sqlite3.Error as error:
+            #    print("Error while connecting to sqlite", error)
+            
+            #print(self.executeQuery(New_Record_Query))
+
     def save_field(self, obj): #saves an individual field
         try:
             fieldName = obj.objectName()
@@ -262,10 +308,12 @@ class NightLetterMain(QtWidgets.QMainWindow):
                 fieldval = str(obj.currentText())
             elif fieldtype == "QTextEdit" or fieldtype == "QTextBrowser":
                 fieldval = obj.toHtml()
+                print(fieldval)
             letterID = self.ui.LetterID.toPlainText()
             valdict = self.ui.LatestValueDict
             if fieldName in valdict:
                 lastLoadFieldValue = valdict[fieldName]
+                
                 con = self.sql_connection()
                 cursorObj = con.cursor()
                 
@@ -276,6 +324,7 @@ class NightLetterMain(QtWidgets.QMainWindow):
                     cursorObj.execute(queryString, [fieldval])
                     con.commit()
                     con.close() 
+                    #self.executeQuery(queryString, fieldval)   
                     self.ui.LatestValueDict[fieldName] = fieldval
                 else:
                     self.load_all_fields(letterID)
@@ -287,35 +336,36 @@ class NightLetterMain(QtWidgets.QMainWindow):
                  raise AttributeError
 
     def load_most_recently_created_record(self): # Finds and loads the record with the most recent date
-        con = application.sql_connection()
+        """con = application.sql_connection()
         cursorObj = con.cursor()
         cursorObj.execute("SELECT max(LetterID) FROM NightLetterData2")
         vals = cursorObj.fetchall()
-        con.close()
-        latestRecordNum = vals[0][0]
+        con.close()"""
+        latestRecordNum = self.executeQuery("SELECT max(LetterID) FROM NightLetterData2")[0][0]
+        #latestRecordNum = vals[0][0]
         self.load_all_fields(latestRecordNum)
 
     def get_newestORoldest_LetterID(self, indicator): # Finds and loads the oldest or most recent record 
-        con = application.sql_connection()
-        cursorObj = con.cursor()
+        #con = application.sql_connection()
+        #cursorObj = con.cursor()
         if indicator == "newest":
-            cursorObj.execute("SELECT max(LetterID) FROM NightLetterData2")
+            return self.executeQuery("SELECT max(LetterID) FROM NightLetterData2")[0][0] #cursorObj.execute("SELECT max(LetterID) FROM NightLetterData2")
         elif indicator == "oldest":
-            cursorObj.execute("SELECT min(LetterID) FROM NightLetterData2")
+            return self.executeQuery("SELECT min(LetterID) FROM NightLetterData2")[0][0] #cursorObj.execute("SELECT min(LetterID) FROM NightLetterData2")
         else:
             print("The get_firstORlast_LetterID function needs an argument that says either \"newest\" or \"oldest\". It didn't get either, so you probably got an error.")
-        vals = cursorObj.fetchall()
-        con.close()
-        RecordNum = vals[0][0]
+        #vals = cursorObj.fetchall()
+        #con.close()
+        #RecordNum = vals[0][0]
         return RecordNum
     
     def query_field(self, fieldname, letterID): # Finds the letter number of the letter with the most recent date
-        con = application.sql_connection()
-        cursorObj = con.cursor()
-        cursorObj.execute("SELECT " + fieldname + " FROM NightLetterData2 WHERE LetterID = '" + letterID + "'")
-        vals = cursorObj.fetchall()
-        return vals[0][0]
-        con.close() 
+        #con = application.sql_connection()
+        #cursorObj = con.cursor()
+        #cursorObj.execute("SELECT " + fieldname + " FROM NightLetterData2 WHERE LetterID = '" + letterID + "'")
+        #vals = cursorObj.fetchall()
+        return self.executeQuery("SELECT " + fieldname + " FROM NightLetterData2 WHERE LetterID = '" + letterID + "'")[0][0] # vals[0][0]
+        #con.close() 
 
     def list_all_fields(self):
         FieldNames = ""
@@ -336,20 +386,22 @@ class NightLetterMain(QtWidgets.QMainWindow):
         FieldNames = fields[0]
         FieldNameList = fields[1]
 
-        try:
-            sqliteConnection = application.sql_connection()
-            cursor = sqliteConnection.cursor()
-            sqlite_select_Query = "SELECT " + FieldNames + " FROM NightLetterData2 WHERE LetterID = " + str(recordNum) 
-            cursor.execute(sqlite_select_Query)
-            SQLrecord = cursor.fetchall()
-            cursor.close()
+        #try:
+        #    sqliteConnection = application.sql_connection()
+        #    cursor = sqliteConnection.cursor()
+        #    sqlite_select_Query = "SELECT " + FieldNames + " FROM NightLetterData2 WHERE LetterID = " + str(recordNum) 
+        #    cursor.execute(sqlite_select_Query)
+        #    SQLrecord = cursor.fetchall()
+        #    cursor.close()
 
-        except sqlite3.Error as error:
-            print("Error while connecting to sqlite", error)
-            return "Record Not Found"
-                
+        #except sqlite3.Error as error:
+        #    print("Error while connecting to sqlite", error)
+        #    return "Record Not Found" 
+
+        SQLrecord = self.executeQuery("SELECT " + FieldNames + " FROM NightLetterData2 WHERE LetterID = " + str(recordNum))
+            
         if SQLrecord == []:
-            print("Record Not Found")
+            #print("Record Not Found")
             return "Record Not Found"
 
         FieldValueList = list(SQLrecord[0])
@@ -365,6 +417,8 @@ class NightLetterMain(QtWidgets.QMainWindow):
 
         self.ui.LatestValueDict = self.query_all_record_fields(recordNum)       #Dictionary of all the most recently queried values for each field from the database. Get the queried values by giving it the field name (i.e. self.ui.LatestValueDict[Safety] )
 
+        #print(recordNum)
+        
         if self.ui.LatestValueDict["LetterID"] == self.get_newestORoldest_LetterID("newest"):
             self.ui.NextRecordPB.setText("New...")
         else:
