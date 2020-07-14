@@ -34,19 +34,9 @@ class DatePickerDialog(QDialog):
     def calendar(self):
         dateSelection = self.ui.calendarWidget.selectedDate()
         date_Selected = datetime.strftime(dateSelection.toPyDate(), '%m/%d/%Y')
-        
-        """con = application.sql_connection()
-        cursorObj = con.cursor()
-        cursorObj.execute("SELECT * FROM NightLetterData2 WHERE Date= '" + date_Selected +  "'")
-        vals = cursorObj.fetchall()
-        con.close()"""
-
         vals = application.executeQuery("SELECT * FROM NightLetterData2 WHERE Date= '" + date_Selected +  "'")
-
         self.ui.AutoSaveActive = False
-
         if vals != []: #vals != []:
-            # chosenRecordNum = vals[0][0]
             NightLetterMain.load_all_fields(application, vals[0][0])
         else:
             print("There is no record for the date selected.") # Maybe a dialog box for this at some point?
@@ -88,7 +78,7 @@ class RemoveAttachmentDialog(QDialog):
     def removeEmptyLines(self):
         attachFieldString = application.ui.Attachments.toHtml()
         emptyCheckBox = "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>"
-        application.update_field("Attachments", attachFieldString.replace(emptyCheckBox,"")) #application.ui.Attachments.setText(attachFieldString)
+        application.update_field("Attachments", attachFieldString.replace(emptyCheckBox,""))
 
 
 # __________________Setup Main Form Code__________________ (makes connections for event handlers and widget signals)
@@ -160,41 +150,20 @@ class NightLetterMain(QtWidgets.QMainWindow):
         if LatestValueDict == "Record Not Found" and prevLetterID > -1: # If the specific record number was not found in the database, try again with a smaller number to get to the correct previous record id. If you get to -1, you have gone too far.
             self.goToPreviousRecord(prevLetterID)
         else:
-            #print(LatestValueDict["LetterID"])
             self.load_all_fields(prevLetterID)
 
     def goToNextRecord(self, letterID): # Go to the next newest record. If currently at the newest record, create a new record with a higher LetterID
-        #print(letterID)
+        
         NewestLetterID = int(self.get_newestORoldest_LetterID("newest"))
-        #print (NewestLetterID )
         nextLetterID = letterID + 1
-        #print(nextLetterID)
+        
         if letterID == NewestLetterID:
-            #print("querying...")
-            #self.ui.NextRecordPB.setText("New...")
             New_Record_Query = "INSERT INTO NightLetterData2 (LetterID, Date) VALUES (\"{0}\",\"{1}\")".format(nextLetterID, date.today().strftime("%m/%d/%Y"))
-            #print(New_Record_Query)
-            #try:
-            #    con = application.sql_connection()
-            #    cursorObj = con.cursor() 
-            #    cursorObj.execute(New_Record_Query)
-            #    con.commit()
-            #    con.close()
-            #    self.load_all_fields(nextLetterID)
-            #except sqlite3.Error as error:
-            #    print("Error while connecting to sqlite", error)
-            
-            #print(self.executeQuery(New_Record_Query))
-
             test = self.executeQuery(New_Record_Query)
-            #print(test)
-
-            if test != "Record Not Found":
-                #print("loading...")
+            if test != "Record Not Found": #Make sure the record is added to the DB without errors before we try to load it
                 self.load_all_fields(nextLetterID)
         else:
             LatestValueDict = self.query_all_record_fields(nextLetterID)       #Dictionary of all the most recently queried values for each field from the database. Get the queried values by giving it the field name (i.e. self.ui.LatestValueDict[Safety] )
-        
             if LatestValueDict == "Record Not Found": # If the specific record number was not found in the database, try again with a incrementally larger number to get to the correct next record id.
                 self.goToNextRecord(nextLetterID)
             else:
@@ -211,13 +180,16 @@ class NightLetterMain(QtWidgets.QMainWindow):
         attachLoc = "\\Attachments\\" + letterID # Must have a folder named Attachments in the same directory as running script
         #recordDate = self.ui.Date.toPlainText().replace("/", "-") #recordDate = datetime.strftime(self.ui.Date.date().toPyDate(), '%m-%d-%y')
         fileName = self.getFileName(docPath) #"{0}-{1}".format(recordDate, self.getFileName(docPath))
+        
         if fileName == False:
             return
         newDocPath = NightLetterPath + attachLoc + "\\" + fileName
         copyNum = 0
-        while self.fileExists(newDocPath):
+        
+        while self.fileExists(newDocPath): #if a file of the same name exists in the folder we are using, add a number to the end to avoid errors from having two files of the same name
             newDocPath= "{0}{1}\\{2}({3}).{4}".format(NightLetterPath, attachLoc, fileName.rsplit('.', 1)[0], str(copyNum), fileName.rsplit('.', 1)[1])
             copyNum += 1
+        
         if copyNum > 0:
             fileName = "{0}({2}).{1}".format(*fileName.rsplit('.', 1) + [copyNum])
         shutil.copyfile(docPath, newDocPath)
@@ -225,18 +197,13 @@ class NightLetterMain(QtWidgets.QMainWindow):
         self.ui.Attachments.append(fileLink)
         self.save_field(self.ui.Attachments)
     
-    def remove_attachment(self):
-        #print("work in progress")    
-        attachList =  self.attachDict()
+    def remove_attachment(self): #Launch the remove attachments dialog only if there are actually attachments to remove
+        attachList =  self.ui.Attachments.toPlainText().split("\n")
         if attachList == ['']:
             return
         rad = RemoveAttachmentDialog(attachList)
         rad.setStyleSheet(loadStyleSheet())
         rad.exec_()
-
-    def attachDict(self):
-        attachString = self.ui.Attachments.toPlainText().split("\n")
-        return attachString
 
     def fileExists(self, filepath):
         if os.path.isfile(filepath):
@@ -286,18 +253,6 @@ class NightLetterMain(QtWidgets.QMainWindow):
             print("Error while connecting to sqlite", error)
             return "Record Not Found"
 
-        #try:
-            #    con = application.sql_connection()
-            #    cursorObj = con.cursor() 
-            #    cursorObj.execute(New_Record_Query)
-            #    con.commit()
-            #    con.close()
-            #    self.load_all_fields(nextLetterID)
-            #except sqlite3.Error as error:
-            #    print("Error while connecting to sqlite", error)
-            
-            #print(self.executeQuery(New_Record_Query))
-
     def save_field(self, obj): #saves an individual field
         try:
             fieldName = obj.objectName()
@@ -310,21 +265,14 @@ class NightLetterMain(QtWidgets.QMainWindow):
                 fieldval = obj.toHtml()
             letterID = self.ui.LetterID.toPlainText()
             valdict = self.ui.LatestValueDict
+            
             if fieldName in valdict:
                 lastLoadFieldValue = valdict[fieldName]
-                
-                #con = self.sql_connection()
-                #cursorObj = con.cursor()
-                
-                currentDBFieldValue = self.query_field(fieldName, letterID)
+                currentDBFieldValue = self.executeQuery("SELECT " + fieldname + " FROM NightLetterData2 WHERE LetterID = '" + letterID + "'")[0][0]
                 
                 if currentDBFieldValue == lastLoadFieldValue or currentDBFieldValue == None:
                     queryString = "UPDATE NightLetterData2 SET " + fieldName + " = ? WHERE LetterID = '" + letterID + "'"
-                    #print(queryString)
-                    #print(queryString, [fieldval])
-                    #cursorObj.execute(queryString, [fieldval])
-                    #con.commit()
-                    #con.close() 
+
                     self.executeQuery(queryString, fieldval)   
                     self.ui.LatestValueDict[fieldName] = fieldval
                 else:
@@ -337,37 +285,18 @@ class NightLetterMain(QtWidgets.QMainWindow):
                  raise AttributeError
 
     def load_most_recently_created_record(self): # Finds and loads the record with the most recent date
-        """con = application.sql_connection()
-        cursorObj = con.cursor()
-        cursorObj.execute("SELECT max(LetterID) FROM NightLetterData2")
-        vals = cursorObj.fetchall()
-        con.close()"""
         latestRecordNum = self.executeQuery("SELECT max(LetterID) FROM NightLetterData2")[0][0]
-        #latestRecordNum = vals[0][0]
         self.load_all_fields(latestRecordNum)
 
     def get_newestORoldest_LetterID(self, indicator): # Finds and loads the oldest or most recent record 
-        #con = application.sql_connection()
-        #cursorObj = con.cursor()
         if indicator == "newest":
             return self.executeQuery("SELECT max(LetterID) FROM NightLetterData2")[0][0] #cursorObj.execute("SELECT max(LetterID) FROM NightLetterData2")
         elif indicator == "oldest":
             return self.executeQuery("SELECT min(LetterID) FROM NightLetterData2")[0][0] #cursorObj.execute("SELECT min(LetterID) FROM NightLetterData2")
         else:
             print("The get_firstORlast_LetterID function needs an argument that says either \"newest\" or \"oldest\". It didn't get either, so you probably got an error.")
-        #vals = cursorObj.fetchall()
-        #con.close()
-        #RecordNum = vals[0][0]
         return RecordNum
     
-    def query_field(self, fieldname, letterID): # Finds the letter number of the letter with the most recent date
-        #con = application.sql_connection()
-        #cursorObj = con.cursor()
-        #cursorObj.execute("SELECT " + fieldname + " FROM NightLetterData2 WHERE LetterID = '" + letterID + "'")
-        #vals = cursorObj.fetchall()
-        return self.executeQuery("SELECT " + fieldname + " FROM NightLetterData2 WHERE LetterID = '" + letterID + "'")[0][0] # vals[0][0]
-        #con.close() 
-
     def list_all_fields(self):
         FieldNames = ""
         FieldNameList = []
@@ -387,22 +316,9 @@ class NightLetterMain(QtWidgets.QMainWindow):
         FieldNames = fields[0]
         FieldNameList = fields[1]
 
-        #try:
-        #    sqliteConnection = application.sql_connection()
-        #    cursor = sqliteConnection.cursor()
-        #    sqlite_select_Query = "SELECT " + FieldNames + " FROM NightLetterData2 WHERE LetterID = " + str(recordNum) 
-        #    cursor.execute(sqlite_select_Query)
-        #    SQLrecord = cursor.fetchall()
-        #    cursor.close()
-
-        #except sqlite3.Error as error:
-        #    print("Error while connecting to sqlite", error)
-        #    return "Record Not Found" 
-
         SQLrecord = self.executeQuery("SELECT " + FieldNames + " FROM NightLetterData2 WHERE LetterID = " + str(recordNum))
             
         if SQLrecord == []:
-            #print("Record Not Found")
             return "Record Not Found"
 
         FieldValueList = list(SQLrecord[0])
@@ -418,8 +334,6 @@ class NightLetterMain(QtWidgets.QMainWindow):
 
         self.ui.LatestValueDict = self.query_all_record_fields(recordNum)       #Dictionary of all the most recently queried values for each field from the database. Get the queried values by giving it the field name (i.e. self.ui.LatestValueDict[Safety] )
 
-        #print(recordNum)
-        
         if self.ui.LatestValueDict["LetterID"] == self.get_newestORoldest_LetterID("newest"):
             self.ui.NextRecordPB.setText("New...")
         else:
