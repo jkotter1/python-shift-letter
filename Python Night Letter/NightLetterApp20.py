@@ -178,8 +178,7 @@ class NightLetterMain(QtWidgets.QMainWindow):
             return
         NightLetterPath = "W:\\CLTBODY\\Kotter\\Projects\\Night Letter Updates\\Python Night Letter" #Need to be able to set this programmitically, not have it hard-coded.
         attachLoc = "\\Attachments\\" + letterID # Must have a folder named Attachments in the same directory as running script
-        #recordDate = self.ui.Date.toPlainText().replace("/", "-") #recordDate = datetime.strftime(self.ui.Date.date().toPyDate(), '%m-%d-%y')
-        fileName = self.getFileName(docPath) #"{0}-{1}".format(recordDate, self.getFileName(docPath))
+        fileName = self.getFileName(docPath)
         
         if fileName == False:
             return
@@ -205,9 +204,9 @@ class NightLetterMain(QtWidgets.QMainWindow):
         rad.setStyleSheet(loadStyleSheet())
         rad.exec_()
 
-    def fileExists(self, filepath):
-        if os.path.isfile(filepath):
-            print("The file already exists!")
+    def fileExists(self, filepath): # check to see if the attachment we are adding has the same name as an existing attachment. 
+        if os.path.isfile(filepath): #If so, will have to change the name of the new attachment to avoid a save conflict
+            #print("The file already exists!")
             return True
         return False
 
@@ -237,12 +236,12 @@ class NightLetterMain(QtWidgets.QMainWindow):
         except Error:
             print(Error)
     
-    def executeQuery(self, queryString, htmlarg = ""):
+    def executeQuery(self, queryString, htmlarg = ""): #function for communicating with the sqlite3 db. It executes a given query string, using a special format if the query includes a html string from a field.
         try:
             sqliteConnection = sqlite3.connect('Night Letter 2.0 data.db')
             cursor = sqliteConnection.cursor()
             if htmlarg != "":
-                cursor.execute(queryString, [htmlarg])
+                cursor.execute(queryString, [htmlarg]) # Have to use this format to write html strings, otherwise the "<" and ">" cause errors when writing to the sqlite db
             else:
                 cursor.execute(queryString)
             sqliteConnection.commit()
@@ -253,7 +252,7 @@ class NightLetterMain(QtWidgets.QMainWindow):
             print("Error while connecting to sqlite", error)
             return "Record Not Found"
 
-    def save_field(self, obj): #saves an individual field
+    def save_field(self, obj): #saves an individual field by writing its current value to the db
         try:
             fieldName = obj.objectName()
             fieldtype = obj.__class__.__name__
@@ -268,7 +267,7 @@ class NightLetterMain(QtWidgets.QMainWindow):
             
             if fieldName in valdict:
                 lastLoadFieldValue = valdict[fieldName]
-                currentDBFieldValue = self.executeQuery("SELECT " + fieldname + " FROM NightLetterData2 WHERE LetterID = '" + letterID + "'")[0][0]
+                currentDBFieldValue = self.executeQuery("SELECT " + fieldName + " FROM NightLetterData2 WHERE LetterID = '" + letterID + "'")[0][0]
                 
                 if currentDBFieldValue == lastLoadFieldValue or currentDBFieldValue == None:
                     queryString = "UPDATE NightLetterData2 SET " + fieldName + " = ? WHERE LetterID = '" + letterID + "'"
@@ -297,7 +296,7 @@ class NightLetterMain(QtWidgets.QMainWindow):
             print("The get_firstORlast_LetterID function needs an argument that says either \"newest\" or \"oldest\". It didn't get either, so you probably got an error.")
         return RecordNum
     
-    def list_all_fields(self):
+    def list_all_fields(self): # Get a list of all the fields that can be updated. This will later be used to query the info needed from the db
         FieldNames = ""
         FieldNameList = []
         for w in self.allWidgets():
@@ -311,13 +310,13 @@ class NightLetterMain(QtWidgets.QMainWindow):
                     FieldNames = FieldNames + ", " + wName
         return FieldNames, FieldNameList
 
-    def query_all_record_fields(self, recordNum):
+    def query_all_record_fields(self, recordNum): # Query the db for all the record fields associated with a particular LetterID, then store that info in a dictionary for future use
         fields = self.list_all_fields()
         FieldNames = fields[0]
         FieldNameList = fields[1]
 
         SQLrecord = self.executeQuery("SELECT " + FieldNames + " FROM NightLetterData2 WHERE LetterID = " + str(recordNum))
-            
+
         if SQLrecord == []:
             return "Record Not Found"
 
@@ -334,6 +333,7 @@ class NightLetterMain(QtWidgets.QMainWindow):
 
         self.ui.LatestValueDict = self.query_all_record_fields(recordNum)       #Dictionary of all the most recently queried values for each field from the database. Get the queried values by giving it the field name (i.e. self.ui.LatestValueDict[Safety] )
 
+        #Adjust navigation buttons if we are the first or last record
         if self.ui.LatestValueDict["LetterID"] == self.get_newestORoldest_LetterID("newest"):
             self.ui.NextRecordPB.setText("New...")
         else:
@@ -343,11 +343,12 @@ class NightLetterMain(QtWidgets.QMainWindow):
             self.ui.PrevRecordPB.hide()
         else:
             self.ui.PrevRecordPB.show()
-
+        
+        #Go through each QWidget and see if it is a type that can be updated. If it can, update the field with a value from the LastestValDict that we just queried from the db
         for w in self.allWidgets():
             wName = w.widget().objectName() 
             wType = w.widget().__class__.__name__
-            if wType  == "QTextEdit" or wType == "QTextBrowser":
+            if wType  == "QTextEdit" or wType == "QTextBrowser" or wType == "QComboBox":
                 NewVal = str(self.ui.LatestValueDict[wName])
                 self.update_field(wName,NewVal)
 
