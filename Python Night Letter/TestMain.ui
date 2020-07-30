@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1167</width>
-    <height>712</height>
+    <width>1034</width>
+    <height>767</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Night Letter</string>
@@ -17,399 +23,394 @@
    <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout">
-    <item>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="QScrollArea" name="scrollArea">
-        <property name="styleSheet">
-         <string notr="true"/>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <layout class="QGridLayout" name="gridLayout_3">
+    <item row="0" column="0">
+     <widget class="QScrollArea" name="scrollArea">
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>1128</width>
+         <height>876</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetNoConstraint</enum>
         </property>
-        <property name="widgetResizable">
-         <bool>true</bool>
-        </property>
-        <widget class="QWidget" name="scrollAreaWidgetContents_2">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>1271</width>
-           <height>2024</height>
-          </rect>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_4">
-          <item row="0" column="0">
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item row="0" column="0">
+         <layout class="QHBoxLayout" name="HorizLayoutContainer">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetNoConstraint</enum>
+          </property>
+          <item>
+           <layout class="QVBoxLayout" name="VertLayoutContainer">
+            <property name="sizeConstraint">
+             <enum>QLayout::SetNoConstraint</enum>
+            </property>
+            <property name="bottomMargin">
+             <number>9</number>
+            </property>
             <item>
-             <layout class="QVBoxLayout" name="verticalLayout_3">
-              <property name="bottomMargin">
-               <number>9</number>
+             <layout class="QGridLayout" name="WidgetLayout1">
+              <property name="sizeConstraint">
+               <enum>QLayout::SetNoConstraint</enum>
               </property>
+              <item row="5" column="1">
+               <widget class="QPushButton" name="PrevRecordPB">
+                <property name="text">
+                 <string>Previous</string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="2">
+               <widget class="QPushButton" name="NextRecordPB">
+                <property name="text">
+                 <string>Next</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="LetterIDLabel">
+                <property name="maximumSize">
+                 <size>
+                  <width>120</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Letter ID</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0">
+               <widget class="QTextEdit" name="LetterID">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="mouseTracking">
+                 <bool>false</bool>
+                </property>
+                <property name="tabChangesFocus">
+                 <bool>true</bool>
+                </property>
+                <property name="textInteractionFlags">
+                 <set>Qt::NoTextInteraction</set>
+                </property>
+               </widget>
+              </item>
+              <item row="7" column="7">
+               <widget class="QPushButton" name="RemoveAttachmentPB">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Remove...</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="6" colspan="2">
+               <widget class="QLabel" name="AttachmentsLabel">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>1000</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Attachments&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="4">
+               <widget class="QLabel" name="ProdShiftLabel">
+                <property name="maximumSize">
+                 <size>
+                  <width>120</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Prod. Crew</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="3">
+               <widget class="QLabel" name="MaintCrewLabel">
+                <property name="maximumSize">
+                 <size>
+                  <width>120</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Maint. Crew</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="5">
+               <widget class="QLabel" name="STARTAuditCountLabel">
+                <property name="maximumSize">
+                 <size>
+                  <width>200</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>START Card Audits</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="5">
+               <widget class="QTextEdit" name="STARTAuditCount">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>30</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="1" colspan="2">
+               <widget class="QTextEdit" name="Date">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>31</height>
+                 </size>
+                </property>
+                <property name="textInteractionFlags">
+                 <set>Qt::TextEditorInteraction</set>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1" colspan="2">
+               <widget class="QLabel" name="DateLabel">
+                <property name="text">
+                 <string>Date</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="4">
+               <widget class="QComboBox" name="ProdShift">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>A</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>B</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item row="4" column="3">
+               <widget class="QComboBox" name="MaintCrew">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>A</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>B</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>C</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>D</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item row="4" column="6" rowspan="3" colspan="2">
+               <widget class="QTextBrowser" name="Attachments">
+                <property name="minimumSize">
+                 <size>
+                  <width>300</width>
+                  <height>0</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="7" column="6">
+               <widget class="QPushButton" name="AttachmentPB">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Attach...</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="TextEntryArea">
               <item>
-               <layout class="QGridLayout" name="WidgetGridLayout">
-                <item row="19" column="0" colspan="8">
-                 <widget class="QTextEdit" name="Breakdowns"/>
-                </item>
-                <item row="32" column="0" colspan="2">
-                 <widget class="QLabel" name="EquipRepairsLabel">
+               <layout class="QVBoxLayout" name="WidgetLayout2">
+                <item>
+                 <widget class="QLabel" name="SafetyLabel">
                   <property name="text">
-                   <string>Equipment Repairs</string>
+                   <string>Safety</string>
                   </property>
                  </widget>
                 </item>
-                <item row="12" column="0">
-                 <widget class="QLabel" name="STARTCardAuditLabel">
-                  <property name="text">
-                   <string>Start Card Audit</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="36" column="0" colspan="2">
-                 <widget class="QLabel" name="EnvironmentalLabel">
-                  <property name="text">
-                   <string>Environmental</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="21" column="0" colspan="8">
-                 <widget class="QTextEdit" name="TopXActions"/>
-                </item>
-                <item row="24" column="0" colspan="2">
-                 <widget class="QLabel" name="RecognitionLabel">
-                  <property name="text">
-                   <string>Recognition</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="35" column="0" colspan="8">
-                 <widget class="QTextEdit" name="FollowUp"/>
-                </item>
-                <item row="5" column="2">
-                 <widget class="QPushButton" name="NextRecordPB">
-                  <property name="text">
-                   <string>Next</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="27" column="0" colspan="8">
-                 <widget class="QTextEdit" name="Training"/>
-                </item>
-                <item row="14" column="0">
-                 <widget class="QLabel" name="JoiningLabel">
-                  <property name="text">
-                   <string>Joining</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="30" column="0" colspan="2">
-                 <widget class="QLabel" name="DoorRepairsLabel">
-                  <property name="text">
-                   <string>Door Repairs</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="22" column="0" colspan="2">
-                 <widget class="QLabel" name="ManningMaterialsLabel">
-                  <property name="text">
-                   <string>Manning/Materials</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="23" column="0" colspan="8">
-                 <widget class="QTextEdit" name="ManningMaterials"/>
-                </item>
-                <item row="2" column="4">
-                 <widget class="QLabel" name="ProdShiftLabel">
-                  <property name="maximumSize">
-                   <size>
-                    <width>120</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Prod. Crew</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="29" column="0" colspan="8">
-                 <widget class="QTextEdit" name="EquipFailures"/>
-                </item>
-                <item row="2" column="3">
-                 <widget class="QLabel" name="MaintCrewLabel">
-                  <property name="maximumSize">
-                   <size>
-                    <width>120</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Maint. Crew</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="26" column="0" colspan="2">
-                 <widget class="QLabel" name="TrainingLabel">
-                  <property name="text">
-                   <string>Notifications - HR - Training</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="5" column="1">
-                 <widget class="QPushButton" name="PrevRecordPB">
-                  <property name="text">
-                   <string>Previous</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="4" column="5">
-                 <widget class="QTextEdit" name="STARTAuditCount">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>30</height>
-                   </size>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="5">
-                 <widget class="QLabel" name="STARTAuditCountLabel">
-                  <property name="maximumSize">
-                   <size>
-                    <width>200</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>START Card Audits</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="28" column="0" colspan="2">
-                 <widget class="QLabel" name="EquipFailuresLabel">
-                  <property name="text">
-                   <string>Equipment Failures</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="37" column="0" colspan="8">
-                 <widget class="QTextEdit" name="Environmental"/>
-                </item>
-                <item row="33" column="0" colspan="8">
-                 <widget class="QTextEdit" name="EquipRepairs"/>
-                </item>
-                <item row="2" column="1" colspan="2">
-                 <widget class="QLabel" name="DateLabel">
-                  <property name="text">
-                   <string>Date</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="4" column="1" colspan="2">
-                 <widget class="QTextEdit" name="Date">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>31</height>
-                   </size>
-                  </property>
-                  <property name="textInteractionFlags">
-                   <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="4" column="3">
-                 <widget class="QComboBox" name="MaintCrew">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>30</height>
-                   </size>
-                  </property>
-                  <item>
-                   <property name="text">
-                    <string>A</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>B</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>C</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>D</string>
-                   </property>
-                  </item>
-                 </widget>
-                </item>
-                <item row="4" column="4">
-                 <widget class="QComboBox" name="ProdShift">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>30</height>
-                   </size>
-                  </property>
-                  <item>
-                   <property name="text">
-                    <string>A</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>B</string>
-                   </property>
-                  </item>
-                 </widget>
-                </item>
-                <item row="16" column="0" colspan="2">
-                 <widget class="QLabel" name="DimensionalLabel">
-                  <property name="text">
-                   <string>Dimensional</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="4" column="6" rowspan="3" colspan="2">
-                 <widget class="QTextBrowser" name="Attachments">
-                  <property name="minimumSize">
-                   <size>
-                    <width>300</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="6" colspan="2">
-                 <widget class="QLabel" name="AttachmentsLabel">
-                  <property name="maximumSize">
-                   <size>
-                    <width>1000</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Attachments&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="18" column="0" colspan="2">
-                 <widget class="QLabel" name="BreakdownsLabel">
-                  <property name="text">
-                   <string>Delivery - Breakdowns</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="11" column="0" colspan="8">
+                <item>
                  <widget class="QTextEdit" name="Safety">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>1002</height>
-                   </size>
-                  </property>
-                  <property name="toolTip">
-                   <string>Safety Related Incidents and Notifications</string>
-                  </property>
                   <property name="sizeAdjustPolicy">
-                   <enum>QAbstractScrollArea::AdjustToContents</enum>
-                  </property>
-                  <property name="tabChangesFocus">
-                   <bool>true</bool>
-                  </property>
-                  <property name="textInteractionFlags">
-                   <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::TextBrowserInteraction|Qt::TextEditable|Qt::TextEditorInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+                   <enum>QAbstractScrollArea::AdjustIgnored</enum>
                   </property>
                   <property name="placeholderText">
                    <string>No Issues</string>
                   </property>
                  </widget>
                 </item>
-                <item row="2" column="0">
-                 <widget class="QLabel" name="LetterIDLabel">
-                  <property name="maximumSize">
-                   <size>
-                    <width>120</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
+                <item>
+                 <widget class="QLabel" name="JoiningLabel">
                   <property name="text">
-                   <string>Letter ID</string>
+                   <string>Joining</string>
                   </property>
                  </widget>
                 </item>
-                <item row="15" column="0" colspan="8">
+                <item>
                  <widget class="QTextEdit" name="Joining"/>
                 </item>
-                <item row="17" column="0" colspan="8">
-                 <widget class="QTextEdit" name="Dimensional"/>
-                </item>
-                <item row="25" column="0" colspan="8">
-                 <widget class="QTextEdit" name="Recognition"/>
-                </item>
-                <item row="4" column="0">
-                 <widget class="QTextEdit" name="LetterID">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>30</height>
-                   </size>
-                  </property>
-                  <property name="mouseTracking">
-                   <bool>false</bool>
-                  </property>
-                  <property name="tabChangesFocus">
-                   <bool>true</bool>
-                  </property>
-                  <property name="textInteractionFlags">
-                   <set>Qt::NoTextInteraction</set>
+                <item>
+                 <widget class="QLabel" name="TrainingLabel">
+                  <property name="text">
+                   <string>Notifications - HR - Training</string>
                   </property>
                  </widget>
                 </item>
-                <item row="34" column="0" colspan="2">
+                <item>
+                 <widget class="QTextEdit" name="Training"/>
+                </item>
+                <item>
+                 <widget class="QLabel" name="EquipRepairsLabel">
+                  <property name="text">
+                   <string>Equipment Failures/Repairs</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QTextEdit" name="EquipRepairs"/>
+                </item>
+                <item>
                  <widget class="QLabel" name="FollowUpLabel">
                   <property name="text">
                    <string>Follow-Up Needed</string>
                   </property>
                  </widget>
                 </item>
-                <item row="20" column="0" colspan="2">
+                <item>
+                 <widget class="QTextEdit" name="FollowUp"/>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QVBoxLayout" name="WidgetLayout3">
+                <item>
                  <widget class="QLabel" name="TopXActionsLabel">
                   <property name="text">
                    <string>Top X Actions</string>
                   </property>
                  </widget>
                 </item>
-                <item row="13" column="0" colspan="8">
-                 <widget class="QTextEdit" name="STARTCardAudit"/>
+                <item>
+                 <widget class="QTextEdit" name="TopXActions"/>
                 </item>
-                <item row="31" column="0" colspan="8">
+                <item>
+                 <widget class="QLabel" name="DimensionalLabel">
+                  <property name="text">
+                   <string>Dimensional</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QTextEdit" name="Dimensional"/>
+                </item>
+                <item>
+                 <widget class="QLabel" name="RecognitionLabel">
+                  <property name="text">
+                   <string>Recognition</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QTextEdit" name="Recognition"/>
+                </item>
+                <item>
+                 <widget class="QLabel" name="DoorRepairsLabel">
+                  <property name="text">
+                   <string>Door Repairs</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
                  <widget class="QTextEdit" name="DoorRepairs"/>
                 </item>
-                <item row="7" column="6">
-                 <widget class="QPushButton" name="AttachmentPB">
+                <item>
+                 <widget class="QLabel" name="EnvironmentalLabel">
                   <property name="text">
-                   <string>Attach...</string>
+                   <string>Environmental</string>
                   </property>
                  </widget>
                 </item>
-                <item row="7" column="7">
-                 <widget class="QPushButton" name="RemoveAttachmentPB">
-                  <property name="text">
-                   <string>Remove...</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="10" column="0" colspan="8">
-                 <widget class="QLabel" name="SafetyLabel">
-                  <property name="text">
-                   <string>Safety</string>
-                  </property>
-                 </widget>
+                <item>
+                 <widget class="QTextEdit" name="Environmental"/>
                 </item>
                </layout>
               </item>
@@ -418,74 +419,84 @@
            </layout>
           </item>
          </layout>
-        </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <layout class="QGridLayout" name="WidgetLayout4">
+      <property name="verticalSpacing">
+       <number>8</number>
+      </property>
+      <item row="0" column="0">
+       <widget class="QPushButton" name="GoToDate">
+        <property name="maximumSize">
+         <size>
+          <width>300</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Go to Date</string>
+        </property>
        </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QPushButton" name="ReportsButton">
+        <property name="maximumSize">
+         <size>
+          <width>300</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Reports</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="PrintButton">
+        <property name="maximumSize">
+         <size>
+          <width>300</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Print</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QPushButton" name="SearchButton">
+        <property name="maximumSize">
+         <size>
+          <width>300</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Search</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </item>
    </layout>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1167</width>
-     <height>37</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuNight_Letter">
-    <property name="title">
-     <string>Shift Letter </string>
-    </property>
-    <widget class="QMenu" name="menuOption_2">
-     <property name="title">
-      <string>Shutdown Form</string>
-     </property>
-     <addaction name="actionOption_A"/>
-     <addaction name="separator"/>
-     <addaction name="actionOption_B"/>
-    </widget>
-    <addaction name="separator"/>
-    <addaction name="menuOption_2"/>
-    <addaction name="separator"/>
-    <addaction name="actionOption_3"/>
-    <addaction name="separator"/>
-    <addaction name="actionStartup_Checklist"/>
-    <addaction name="actionRecognition"/>
-    <addaction name="actionStart_Card_Report"/>
-   </widget>
-   <widget class="QMenu" name="menuSave">
-    <property name="title">
-     <string>Save</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="menuPrint">
-    <property name="title">
-     <string>Print</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="menuDate">
-    <property name="title">
-     <string>Date</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="menuDown">
-    <property name="title">
-     <string>Down</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="menuUp">
-    <property name="title">
-     <string>Up</string>
-    </property>
-   </widget>
-   <addaction name="menuNight_Letter"/>
-   <addaction name="menuSave"/>
-   <addaction name="menuPrint"/>
-   <addaction name="menuDate"/>
-   <addaction name="menuDown"/>
-   <addaction name="menuUp"/>
   </widget>
   <action name="actionOption_3">
    <property name="text">
@@ -517,249 +528,19 @@
     <string>Start Card Report</string>
    </property>
   </action>
+  <action name="actionSTART_Card_Audit_Report">
+   <property name="text">
+    <string>START Card Audit</string>
+   </property>
+  </action>
+  <action name="actionRecognition_Report">
+   <property name="text">
+    <string>Recognition</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections>
-  <connection>
-   <sender>LetterID</sender>
-   <signal>textChanged()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>savefield()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>93</x>
-     <y>357</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>274</x>
-     <y>0</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>MaintCrew</sender>
-   <signal>currentIndexChanged(int)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>savefield()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>617</x>
-     <y>302</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>557</x>
-     <y>0</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>STARTAuditCount</sender>
-   <signal>textChanged()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>savefield()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>820</x>
-     <y>328</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>1035</x>
-     <y>0</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>ProdShift</sender>
-   <signal>currentIndexChanged(int)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>savefield()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>719</x>
-     <y>302</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>235</x>
-     <y>0</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>Safety</sender>
-   <signal>textChanged()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>savefield()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>946</x>
-     <y>567</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>932</x>
-     <y>0</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>STARTCardAudit</sender>
-   <signal>textChanged()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>savefield()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>1003</x>
-     <y>663</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>960</x>
-     <y>0</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>Joining</sender>
-   <signal>textChanged()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>savefield()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>994</x>
-     <y>759</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>1008</x>
-     <y>0</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>Dimensional</sender>
-   <signal>textChanged()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>savefield()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>854</x>
-     <y>808</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>957</x>
-     <y>0</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>Breakdowns</sender>
-   <signal>textChanged()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>savefield()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>923</x>
-     <y>909</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>906</x>
-     <y>0</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>TopXActions</sender>
-   <signal>textChanged()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>savefield()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>1023</x>
-     <y>1011</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>1035</x>
-     <y>0</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>ManningMaterials</sender>
-   <signal>textChanged()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>savefield()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>465</x>
-     <y>1110</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>516</x>
-     <y>0</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>Recognition</sender>
-   <signal>textChanged()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>savefield()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>553</x>
-     <y>1230</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>504</x>
-     <y>0</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>Training</sender>
-   <signal>textChanged()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>savefield()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>739</x>
-     <y>1328</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>583</x>
-     <y>0</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>EquipFailures</sender>
-   <signal>textChanged()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>savefield()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>557</x>
-     <y>1431</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>466</x>
-     <y>0</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>DoorRepairs</sender>
-   <signal>textChanged()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>savefield()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>390</x>
-     <y>1527</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>403</x>
-     <y>0</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>EquipRepairs</sender>
    <signal>textChanged()</signal>
@@ -767,27 +548,11 @@
    <slot>savefield()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>897</x>
-     <y>1623</y>
+     <x>569</x>
+     <y>736</y>
     </hint>
     <hint type="destinationlabel">
      <x>840</x>
-     <y>0</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>FollowUp</sender>
-   <signal>textChanged()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>savefield()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>1013</x>
-     <y>1719</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>1035</x>
      <y>0</y>
     </hint>
    </hints>
@@ -799,11 +564,187 @@
    <slot>savefield()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1083</x>
-     <y>1815</y>
+     <x>1124</x>
+     <y>864</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1035</x>
+     <x>1033</x>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>DoorRepairs</sender>
+   <signal>textChanged()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>savefield()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>958</x>
+     <y>736</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>403</x>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Recognition</sender>
+   <signal>textChanged()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>savefield()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1121</x>
+     <y>608</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>504</x>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>FollowUp</sender>
+   <signal>textChanged()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>savefield()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>569</x>
+     <y>864</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1033</x>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Training</sender>
+   <signal>textChanged()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>savefield()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>569</x>
+     <y>608</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>583</x>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>STARTAuditCount</sender>
+   <signal>textChanged()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>savefield()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>819</x>
+     <y>102</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1033</x>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ProdShift</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>savefield()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>613</x>
+     <y>102</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>235</x>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MaintCrew</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>savefield()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>487</x>
+     <y>102</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>557</x>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Dimensional</sender>
+   <signal>textChanged()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>savefield()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1124</x>
+     <y>480</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>957</x>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>TopXActions</sender>
+   <signal>textChanged()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>savefield()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1124</x>
+     <y>352</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1033</x>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>LetterID</sender>
+   <signal>textChanged()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>savefield()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>105</x>
+     <y>102</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>274</x>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Joining</sender>
+   <signal>textChanged()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>savefield()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>569</x>
+     <y>480</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1008</x>
      <y>0</y>
     </hint>
    </hints>
@@ -815,12 +756,28 @@
    <slot>savefield()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1126</x>
-     <y>461</y>
+     <x>1125</x>
+     <y>162</y>
     </hint>
     <hint type="destinationlabel">
      <x>798</x>
      <y>44</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Safety</sender>
+   <signal>textChanged()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>savefield()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>415</x>
+     <y>310</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>425</x>
+     <y>7</y>
     </hint>
    </hints>
   </connection>

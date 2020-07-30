@@ -100,11 +100,13 @@ class NightLetterMain(QtWidgets.QMainWindow):
         self.ui.Attachments.anchorClicked.connect(self.linkClicked)
         self.ui.Attachments.setOpenLinks(False)
 
-        self.ui.Date.installEventFilter(self)
+        #self.ui.Date.installEventFilter(self)
+        self.ui.GoToDate.clicked.connect(self.datePicker)
+
     
-    def eventFilter(self, source, event):
-        self.ui.Date.mousePressEvent = self.datePicker
-        return super(NightLetterMain, self).eventFilter(source, event)
+    #def eventFilter(self, source, event):
+    #    self.ui.Date.mousePressEvent = self.datePicker
+    #    return super(NightLetterMain, self).eventFilter(source, event)
 
 
 # __________________Date Change/Record Navigation Code__________________ (works with Date Picker Dialog)
@@ -300,14 +302,17 @@ class NightLetterMain(QtWidgets.QMainWindow):
         FieldNames = ""
         FieldNameList = []
         for w in self.allWidgets():
-            wName = w.widget().objectName()
-            wType = w.widget().__class__.__name__
-            if wType == "QTextEdit" or wType == "QTextBrowser" or wType == "QDateEdit" or wType == "QComboBox":
-                FieldNameList.append(wName)
-                if FieldNames == "":
-                    FieldNames = wName
-                else:
-                    FieldNames = FieldNames + ", " + wName
+            try:
+                wName = w.widget().objectName()
+                wType = w.widget().__class__.__name__
+                if wType == "QTextEdit" or wType == "QTextBrowser" or wType == "QDateEdit" or wType == "QComboBox":
+                    FieldNameList.append(wName)
+                    if FieldNames == "":
+                        FieldNames = wName
+                    else:
+                        FieldNames = FieldNames + ", " + wName
+            except AttributeError:
+                continue
         return FieldNames, FieldNameList
 
     def query_all_record_fields(self, recordNum): # Query the db for all the record fields associated with a particular LetterID, then store that info in a dictionary for future use
@@ -346,30 +351,46 @@ class NightLetterMain(QtWidgets.QMainWindow):
         
         #Go through each QWidget and see if it is a type that can be updated. If it can, update the field with a value from the LastestValDict that we just queried from the db
         for w in self.allWidgets():
-            wName = w.widget().objectName() 
-            wType = w.widget().__class__.__name__
-            if wType  == "QTextEdit" or wType == "QTextBrowser" or wType == "QComboBox":
-                NewVal = str(self.ui.LatestValueDict[wName])
-                self.update_field(wName,NewVal)
+            try:
+                wName = w.widget().objectName() 
+                wType = w.widget().__class__.__name__
+                if wType  == "QTextEdit" or wType == "QTextBrowser" or wType == "QComboBox":
+                    NewVal = str(self.ui.LatestValueDict[wName])
+                    self.update_field(wName,NewVal)
+            except AttributeError:
+                continue
 
         self.ui.AutoSaveActive = True # have to turn back on to save as the user types
     
-    def allWidgets(self): # returns a list of all widgets 
-        layout = self.ui.WidgetGridLayout
+    def findAllWidgets(self, layout): # returns a list of all widgets 
+        #layout = self.ui.WidgetLayout1
+        #widglist = (layoutAreas[j].itemAt(i) for j in range(len(layoutAreas)) for i in range(layoutAreas[j].count()))
         return (layout.itemAt(i) for i in range(layout.count()))
+
+    def allWidgets(self):
+
+        layouts = [self.ui.WidgetLayout1, self.ui.WidgetLayout2, self.ui.WidgetLayout3, self.ui.WidgetLayout4]
+        itemlist = []
+        for layout in layouts:
+            for i in range(layout.count()):
+                itemlist.append(layout.itemAt(i))
+        return itemlist
 
     def update_field(self, fieldname, newval): # Inserts a new value into a field
         for w in self.allWidgets():
-            wName = w.widget().objectName() 
-            if wName == fieldname:
-                fieldtype = w.widget().__class__.__name__
-                self.ui.AutoSaveActive = False
-                if fieldtype  == "QTextEdit" or fieldtype == "QTextBrowser":
-                    w.widget().setText(str(newval))
-                elif fieldtype == "QComboBox":
-                    currentIndex = w.widget().findText(str(newval))
-                    w.widget().setCurrentIndex(currentIndex)
-                self.ui.AutoSaveActive = True
+            try:
+                wName = w.widget().objectName() 
+                if wName == fieldname:
+                    fieldtype = w.widget().__class__.__name__
+                    self.ui.AutoSaveActive = False
+                    if fieldtype  == "QTextEdit" or fieldtype == "QTextBrowser":
+                        w.widget().setText(str(newval))
+                    elif fieldtype == "QComboBox":
+                        currentIndex = w.widget().findText(str(newval))
+                        w.widget().setCurrentIndex(currentIndex)
+                    self.ui.AutoSaveActive = True
+            except AttributeError:
+                continue
 
     def check_if_refresh_needed(self): # Check if changes to a record have occured in the database since the record was last loaded. If a change has occured, reload the record.
         letterID = str(self.ui.LetterID.toPlainText())
@@ -402,7 +423,7 @@ if __name__ == "__main__":
     newestRecordNum = application.get_newestORoldest_LetterID("newest")
     application.load_all_fields(newestRecordNum)
  
-    application.show()
+    application.showMaximized()
 
     timer = QTimer(application)
     timer.timeout.connect(application.check_if_refresh_needed)
@@ -420,13 +441,16 @@ if __name__ == "__main__":
 #_____Cosmetic_____
 # Grow text fields based on size?
 # Add pictures/colors to labels/menu bar
-# Make None text go away when loading Null SQL fields
+
 
 #_____Functional_____
 
-# # Make START Card Audits a number-only entry field?
-# Export record as PDF functionality, although would prefer the MainWindow to be sufficiently readable as-is
+# 
+# Make the Date field editable. Use a separate date picker dialog to jump to a letter from a certain date (Maybe grey out dates that don't have letters on file?)
+# Make START Card Audits a number-only entry field?
+# Export record as PDF functionality
 # Query START card audits by month
+# Search all letters for specific search terms, return a set of letters that have search results
 
 #Code from Riley for verifying user ID and permission level from UserLevel Database
 #UserName = getpass.getuser()
@@ -439,6 +463,7 @@ if __name__ == "__main__":
 #        con.close()
 
 #_____Done_____
+# Make None text go away when loading Null SQL fields
 # Allow user to select and attach PDFs and other files - Maybe a central Attachements field instead of 5 separate fields?
 #  -Copy user selected files and store in central W: Drive folder
 #  -Store links to the files in db
@@ -448,4 +473,4 @@ if __name__ == "__main__":
 # Get Date picker for date field
 # Store rich text formatting in database
 # Make the Next button change to New Record if viewing the current record.
-#The load function should be rewritten so that all the data is obtained in 1 query and then distributed to the fields via a loop.
+# The load function should be rewritten so that all the data is obtained in 1 query and then distributed to the fields via a loop.
