@@ -34,7 +34,7 @@ class DatePickerDialog(QDialog):
     def calendar(self):
         dateSelection = self.ui.calendarWidget.selectedDate()
         date_Selected = datetime.strftime(dateSelection.toPyDate(), '%m/%d/%Y')
-        vals = application.executeQuery("SELECT * FROM NightLetterData2 WHERE Date= '" + date_Selected +  "'")
+        vals = application.executeQuery("SELECT * FROM {0} WHERE Date= '{1}'".format(application.DBDataSource, date_Selected))
         self.ui.AutoSaveActive = False
         if vals != []: #vals != []:
             NightLetterMain.load_all_fields(application, vals[0][0])
@@ -89,6 +89,7 @@ class NightLetterMain(QtWidgets.QMainWindow):
         super(NightLetterMain, self).__init__(parent)
  
         self.ui = Ui_MainWindow()
+        self.DBDataSource = "NightLetterData" #Important: This tells the application which table to query in the DB.
         self.ui.setupUi(self)
         self.ui.AutoSaveActive = False
         self.ui.AttachmentPB.clicked.connect(lambda: self.attach_document(self.openFileNameDialog()))
@@ -160,7 +161,7 @@ class NightLetterMain(QtWidgets.QMainWindow):
         nextLetterID = letterID + 1
         
         if letterID == NewestLetterID:
-            New_Record_Query = "INSERT INTO NightLetterData2 (LetterID, Date) VALUES (\"{0}\",\"{1}\")".format(nextLetterID, date.today().strftime("%m/%d/%Y"))
+            New_Record_Query = "INSERT INTO {0} (LetterID, Date) VALUES (\"{1}\",\"{2}\")".format(self.DBDataSource, nextLetterID, date.today().strftime("%m/%d/%Y"))
             test = self.executeQuery(New_Record_Query)
             if test != "Record Not Found": #Make sure the record is added to the DB without errors before we try to load it
                 self.load_all_fields(nextLetterID)
@@ -269,10 +270,10 @@ class NightLetterMain(QtWidgets.QMainWindow):
             
             if fieldName in valdict:
                 lastLoadFieldValue = valdict[fieldName]
-                currentDBFieldValue = self.executeQuery("SELECT " + fieldName + " FROM NightLetterData2 WHERE LetterID = '" + letterID + "'")[0][0]
-                
+                currentDBFieldValue = self.executeQuery("SELECT {0} FROM {1} WHERE LetterID = '{2}'".format(fieldName, self.DBDataSource, letterID))[0][0] 
+                                                        
                 if currentDBFieldValue == lastLoadFieldValue or currentDBFieldValue == None:
-                    queryString = "UPDATE NightLetterData2 SET " + fieldName + " = ? WHERE LetterID = '" + letterID + "'"
+                    queryString = "UPDATE {0} SET {1} = ? WHERE LetterID = '{2}'".format(self.DBDataSource, fieldName, letterID)
 
                     self.executeQuery(queryString, fieldval)   
                     self.ui.LatestValueDict[fieldName] = fieldval
@@ -286,14 +287,14 @@ class NightLetterMain(QtWidgets.QMainWindow):
                  raise AttributeError
 
     def load_most_recently_created_record(self): # Finds and loads the record with the most recent date
-        latestRecordNum = self.executeQuery("SELECT max(LetterID) FROM NightLetterData2")[0][0]
+        latestRecordNum = self.executeQuery("SELECT max(LetterID) FROM {0}".format(self.DBDataSource))[0][0]
         self.load_all_fields(latestRecordNum)
 
     def get_newestORoldest_LetterID(self, indicator): # Finds and loads the oldest or most recent record 
         if indicator == "newest":
-            return self.executeQuery("SELECT max(LetterID) FROM NightLetterData2")[0][0] #cursorObj.execute("SELECT max(LetterID) FROM NightLetterData2")
+            return self.executeQuery("SELECT max(LetterID) FROM {0}".format(self.DBDataSource))[0][0]
         elif indicator == "oldest":
-            return self.executeQuery("SELECT min(LetterID) FROM NightLetterData2")[0][0] #cursorObj.execute("SELECT min(LetterID) FROM NightLetterData2")
+            return self.executeQuery("SELECT min(LetterID) FROM {0}".format(self.DBDataSource))[0][0]
         else:
             print("The get_firstORlast_LetterID function needs an argument that says either \"newest\" or \"oldest\". It didn't get either, so you probably got an error.")
         return RecordNum
@@ -320,7 +321,7 @@ class NightLetterMain(QtWidgets.QMainWindow):
         FieldNames = fields[0]
         FieldNameList = fields[1]
 
-        SQLrecord = self.executeQuery("SELECT " + FieldNames + " FROM NightLetterData2 WHERE LetterID = " + str(recordNum))
+        SQLrecord = self.executeQuery("SELECT {0} FROM {1} WHERE LetterID = {2}".format(FieldNames, self.DBDataSource, str(recordNum)))
 
         if SQLrecord == []:
             return "Record Not Found"
@@ -358,7 +359,9 @@ class NightLetterMain(QtWidgets.QMainWindow):
                     NewVal = str(self.ui.LatestValueDict[wName])
                     self.update_field(wName,NewVal)
             except AttributeError:
-                continue
+                pass
+            except KeyError:
+                print(NewVal)
 
         self.ui.AutoSaveActive = True # have to turn back on to save as the user types
     
