@@ -63,7 +63,7 @@ class RemoveAttachmentDialog(QDialog):
             cbName = checkBox.text()
             letterID = application.ui.LetterID.toPlainText()
             if checkBox.isChecked():
-                AttachmentStoragePath = "W:\\CLTBODY\\Kotter\\Projects\\Night Letter Updates\\Python Night Letter\\Attachments\\" #Should have this reference the same global variable as the attach file function
+                AttachmentStoragePath = applicatoin.AttachmentFolderPath #Should have this reference the same global variable as the attach file function
                 try:
                     os.remove(AttachmentStoragePath+letterID+"\\"+cbName)
                 except FileNotFoundError:
@@ -90,6 +90,7 @@ class NightLetterMain(QtWidgets.QMainWindow):
  
         self.ui = Ui_MainWindow()
         self.DBDataSource = "NightLetterData" #Important: This tells the application which table to query in the DB.
+        self.AttachmentFolderPath = "W:\\CLTBODY\\Kotter\\Projects\\Night Letter Updates\\Data\\Attachments\\"
         self.ui.setupUi(self)
         self.ui.AutoSaveActive = False
         self.ui.AttachmentPB.clicked.connect(lambda: self.attach_document(self.openFileNameDialog()))
@@ -179,17 +180,15 @@ class NightLetterMain(QtWidgets.QMainWindow):
         letterID = self.ui.LetterID.toPlainText()
         if docPath is None:
             return
-        NightLetterPath = "W:\\CLTBODY\\Kotter\\Projects\\Night Letter Updates\\Python Night Letter" #Need to be able to set this programmitically, not have it hard-coded.
-        attachLoc = "\\Attachments\\" + letterID # Must have a folder named Attachments in the same directory as running script
         fileName = self.getFileName(docPath)
         
         if fileName == False:
             return
-        newDocPath = NightLetterPath + attachLoc + "\\" + fileName
+        newDocPath = self.AttachmentFolderPath + "\\" + fileName
         copyNum = 0
         
         while self.fileExists(newDocPath): #if a file of the same name exists in the folder we are using, add a number to the end to avoid errors from having two files of the same name
-            newDocPath= "{0}{1}\\{2}({3}).{4}".format(NightLetterPath, attachLoc, fileName.rsplit('.', 1)[0], str(copyNum), fileName.rsplit('.', 1)[1])
+            newDocPath= "{0}\\{1}({2}).{3}".format(self.AttachmentFolderPath, fileName.rsplit('.', 1)[0], str(copyNum), fileName.rsplit('.', 1)[1])
             copyNum += 1
         
         if copyNum > 0:
@@ -366,8 +365,6 @@ class NightLetterMain(QtWidgets.QMainWindow):
         self.ui.AutoSaveActive = True # have to turn back on to save as the user types
     
     def findAllWidgets(self, layout): # returns a list of all widgets 
-        #layout = self.ui.WidgetLayout1
-        #widglist = (layoutAreas[j].itemAt(i) for j in range(len(layoutAreas)) for i in range(layoutAreas[j].count()))
         return (layout.itemAt(i) for i in range(layout.count()))
 
     def allWidgets(self):
