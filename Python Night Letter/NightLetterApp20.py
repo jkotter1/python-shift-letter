@@ -63,14 +63,14 @@ class RemoveAttachmentDialog(QDialog):
             cbName = checkBox.text()
             letterID = application.ui.LetterID.toPlainText()
             if checkBox.isChecked():
-                AttachmentStoragePath = applicatoin.AttachmentFolderPath #Should have this reference the same global variable as the attach file function
+                AttachmentStoragePath = application.AttachmentFolderPath #Should have this reference the same global variable as the attach file function
                 try:
                     os.remove(AttachmentStoragePath+letterID+"\\"+cbName)
                 except FileNotFoundError:
                     print("The file was not found in the attachments folder.") # Probably should add a dialog box for this at some point.
                 attachFieldString = attachFieldString.replace(cbName,"")
         application.ui.AutoSaveActive = False
-        application.update_field("Attachments", attachFieldString) #application.ui.Attachments.setText(attachFieldString)
+        application.update_field("Attachments", attachFieldString)
         self.removeEmptyLines()
         application.save_field(application.ui.Attachments)
         application.ui.AutoSaveActive = True
@@ -90,10 +90,10 @@ class NightLetterMain(QtWidgets.QMainWindow):
  
         self.ui = Ui_MainWindow()
         self.DBDataSource = "NightLetterData" #Important: This tells the application which table to query in the DB.
-        self.AttachmentFolderPath = "W:\\CLTBODY\\Kotter\\Projects\\Night Letter Updates\\Data\\Attachments\\"
+        self.AttachmentFolderPath = "W:\\CLTBODY\\Kotter\\Projects\\Night Letter Updates\\Data\\Attachments"
         self.ui.setupUi(self)
         self.ui.AutoSaveActive = False
-        self.ui.AttachmentPB.clicked.connect(lambda: self.attach_document(self.openFileNameDialog()))
+        self.ui.AttachmentPB.clicked.connect(lambda: self.attach_document(self.openFileNameDialog())) 
 
         self.ui.PrevRecordPB.clicked.connect(lambda: self.goToRecord("prev"))
         self.ui.NextRecordPB.clicked.connect(lambda: self.goToRecord("next"))
@@ -118,8 +118,8 @@ class NightLetterMain(QtWidgets.QMainWindow):
         dpicker.exec_()    
 
     def linkClicked(self, url):
-        linkPath = "\"" + url.toString().replace("%5C", "/") + "\""
         try:
+            linkPath = "\"" + url.toString().replace("%5C", "/") + "\""
             os.startfile(linkPath)
         except FileNotFoundError:
             print("The requested file is no longer available.") # Probably should add a dialog box for this at some point.
@@ -178,39 +178,46 @@ class NightLetterMain(QtWidgets.QMainWindow):
     def attach_document(self, docPath):
         
         letterID = self.ui.LetterID.toPlainText()
+        
+        #If the dialog is closed by the user, the docPath is None and we end here
         if docPath is None:
             return
         fileName = self.getFileName(docPath)
         
+        #If no name is entered by the user, the fileName is None and we end here
         if fileName == False:
             return
-        newDocPath = self.AttachmentFolderPath + "\\" + fileName
+
+        #Check if an attachment folder for this letter ID exists
+        letterIDAttachFolder = self.AttachmentFolderPath + "\\" + letterID
+        if not os.path.isdir(letterIDAttachFolder): #If the folder does not exist, make it
+            os.mkdir(letterIDAttachFolder)
+
+        newDocPath = "{0}\\{1}".format(letterIDAttachFolder, fileName)
         copyNum = 0
         
-        while self.fileExists(newDocPath): #if a file of the same name exists in the folder we are using, add a number to the end to avoid errors from having two files of the same name
-            newDocPath= "{0}\\{1}({2}).{3}".format(self.AttachmentFolderPath, fileName.rsplit('.', 1)[0], str(copyNum), fileName.rsplit('.', 1)[1])
-            copyNum += 1
-        
+        #if a file of the same name exists in the folder we are using, add a number in parenthesis to the end to avoid errors from having two files of the same name
+        while os.path.isfile(newDocPath): 
+            newDocPath= "{0}\\{1}\\{2}({3}).{4}".format(self.AttachmentFolderPath, letterID, fileName.rsplit('.', 1)[0], str(copyNum), fileName.rsplit('.', 1)[1])
+            copyNum += 1        
         if copyNum > 0:
             fileName = "{0}({2}).{1}".format(*fileName.rsplit('.', 1) + [copyNum])
+        
         shutil.copyfile(docPath, newDocPath)
-        fileLink = '<span><a href=\"{0}\">{1}</a></span>'.format(newDocPath, fileName)
+        fileLink = '<a href=\"{0}\">{1}</a>'.format(newDocPath, fileName)
         self.ui.Attachments.append(fileLink)
         self.save_field(self.ui.Attachments)
+        #print(self.ui.Attachments.toPlainText())
+        #self.ui.Attachments.setText(self.ui.Attachments.toPlainText().split("</p>")[0] + fileLink + self.ui.Attachments.toPlainText().split("</p>")[1])
+        
     
     def remove_attachment(self): #Launch the remove attachments dialog only if there are actually attachments to remove
         attachList =  self.ui.Attachments.toPlainText().split("\n")
-        if attachList == ['']:
+        if attachList == ['']: #If there are no attachments to remove, do not open the removal dialog
             return
         rad = RemoveAttachmentDialog(attachList)
         rad.setStyleSheet(loadStyleSheet())
         rad.exec_()
-
-    def fileExists(self, filepath): # check to see if the attachment we are adding has the same name as an existing attachment. 
-        if os.path.isfile(filepath): #If so, will have to change the name of the new attachment to avoid a save conflict
-            #print("The file already exists!")
-            return True
-        return False
 
     def getFileName(self, path):
         if path.__class__.__name__ == "NoneType":
@@ -224,6 +231,26 @@ class NightLetterMain(QtWidgets.QMainWindow):
         fileName, _ = QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", "","All Files (*);;Python Files (*.py)", options=options)
         if fileName:
             return fileName
+
+    def updateAttachmentLinks(self): 
+        #Used during migration to reformat all links from an Access dump to refer to the new Attachment file locations
+        #Caution! No attachment links can have HTML formatting, or this function will mess them up.
+        #In order to run this function, I had to map it to a button and call it once the form loaded.
+        getAllAttachmentText = "SELECT LetterID, Attachments from NightLetterData"
+        SQLData = self.executeQuery(getAllAttachmentText)
+        for LetterIDandAttachmentPair in SQLData:
+            fileNames = LetterIDandAttachmentPair[1].split("\n")
+            linkStringList = []
+            for name in fileNames:
+                if name != '':
+                    linkStringList.append("<a href=\"{0}\">{1}</a>".format(self.AttachmentFolderPath + "\\" + str(LetterIDandAttachmentPair[0]) + "\\" + name, name))
+            if linkStringList != []:
+                self.load_all_fields(LetterIDandAttachmentPair[0])
+                self.ui.Attachments.setText("")
+                for link in linkStringList:
+                    self.ui.Attachments.append(link)
+                    self.save_field(self.ui.Attachments)
+
 
 # __________________Save and Load Functions__________________
     def savefield(self):  # Receives signals from QWidgets on textChanged
@@ -334,7 +361,7 @@ class NightLetterMain(QtWidgets.QMainWindow):
         return LatestValueDict
         
     def load_all_fields(self, recordNum): # Queries the values for all fields from the database and inserts the values into the fields for the letter form
-        self.ui.AutoSaveActive = False  #so we don't recursively call save_field on textChanged() forever
+        self.ui.AutoSaveActive = False    # so we don't recursively call save_field on textChanged() forever
 
         self.ui.LatestValueDict = self.query_all_record_fields(recordNum)       #Dictionary of all the most recently queried values for each field from the database. Get the queried values by giving it the field name (i.e. self.ui.LatestValueDict[Safety] )
 
@@ -408,7 +435,7 @@ class NightLetterMain(QtWidgets.QMainWindow):
                 self.update_field(fieldname, dbval)
                 self.ui.LatestValueDict[fname] = dbval
 
-# __________________Lauch Application if File is Executed__________________
+# __________________Launch Application if File is Executed__________________
 if __name__ == "__main__": 
       
     app = QtWidgets.QApplication([])
@@ -418,16 +445,21 @@ if __name__ == "__main__":
 
     #dark_stylesheet = qdarkstyle.load_stylesheet_pyqt5() 
     #application.setStyleSheet(dark_stylesheet)
-    application.setStyleSheet(loadStyleSheet())              
+    application.setStyleSheet(loadStyleSheet())
+    
+    
 
     newestRecordNum = application.get_newestORoldest_LetterID("newest")
     application.load_all_fields(newestRecordNum)
  
     application.showMaximized()
 
+    
+
     timer = QTimer(application)
     timer.timeout.connect(application.check_if_refresh_needed)
     timer.start(5000)
+    
 
     sys.exit(app.exec()) 
 
